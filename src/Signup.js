@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "./AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { db } from "./firebase";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -8,18 +10,45 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { signup } = useAuth();
+  const { signup, googleLogin } = useAuth();
   const navigate = useNavigate();
+
+  async function saveUserToFirestore(user) {
+    await setDoc(
+      doc(db, "users", user.uid),
+      {
+        uid: user.uid,
+        displayName: user.displayName || "",
+        email: user.email,
+        photoURL: user.photoURL || "",
+      },
+      { merge: true }
+    );
+  }
 
   async function handleSignup(e) {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      await signup(email, password);
+      const result = await signup(email, password);
+      await saveUserToFirestore(result.user);
       navigate("/dashboard");
     } catch (err) {
       setError("Failed to create account. Try again!");
+    }
+    setLoading(false);
+  }
+
+  async function handleGoogleSignup() {
+    setError("");
+    setLoading(true);
+    try {
+      const result = await googleLogin();
+      await saveUserToFirestore(result.user);
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Google sign-in failed. Try again!");
     }
     setLoading(false);
   }
@@ -56,6 +85,22 @@ export default function Signup() {
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
+
+        <div style={{ display: "flex", alignItems: "center", margin: "20px 0" }}>
+          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #ddd" }} />
+          <span style={{ margin: "0 10px", color: "#aaa", fontSize: "14px" }}>OR</span>
+          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #ddd" }} />
+        </div>
+
+        <button
+          onClick={handleGoogleSignup}
+          disabled={loading}
+          style={{ width: "100%", padding: "12px", background: "white", color: "#333", border: "1px solid #ddd", borderRadius: "8px", fontSize: "16px", cursor: "pointer", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
+        >
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "20px" }} />
+          Continue with Google
+        </button>
+
         <p style={{ textAlign: "center", marginTop: "20px", color: "#555" }}>
           Already have an account? <Link to="/login" style={{ color: "#4f46e5", fontWeight: "bold" }}>Login</Link>
         </p>
