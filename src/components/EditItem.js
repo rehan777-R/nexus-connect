@@ -13,23 +13,23 @@ function EditItem() {
   const navigate = useNavigate();
   const { currentUser, userRole } = useAuth();
 
-  useEffect(() => {
-    const fetchItem = async () => {
-      const docRef = doc(db, 'items', id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        // Check permission
-        if (userRole !== 'admin' && data.createdBy !== currentUser.uid) {
-          navigate('/items');
-          return;
-        }
-        setTitle(data.title);
-        setDescription(data.description);
+useEffect(() => {
+  const fetchItem = async () => {
+    const docRef = doc(db, 'items', id);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      if (userRole !== 'admin' && data.createdBy !== currentUser.uid) {
+        navigate('/items');
+        return;
       }
-    };
-    fetchItem();
-  }, [id]);
+      setTitle(data.title);
+      setDescription(data.description);
+    }
+  };
+  fetchItem();
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [id]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();

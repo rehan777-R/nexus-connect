@@ -23,8 +23,9 @@ function AllItems() {
   };
 
   useEffect(() => {
-    if (currentUser) fetchItems();
-  }, [currentUser, userRole]);
+  if (currentUser) fetchItems();
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [currentUser, userRole]);
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
