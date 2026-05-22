@@ -1,25 +1,22 @@
-
-# My CRUD App
-
-A Single Page Application built with React and Firebase Firestore.
+# Web Assignment 4 - Role-Based Secure Web Application
 
 ## Live Demo
-https://weblabassignment1-arsg397u9-rehan77-rs-projects.vercel.app
+https://web-assignment-4-ten.vercel.app
 
 ## GitHub Repository
-https://github.com/rehan77-R/Web_Lab_Assignment_1
+https://github.com/rehan77-R/Web_Assignment_4
 
 ## Features
-- SPA Routing using React Router DOM
-- Create, Read, Update, Delete (CRUD) operations
-- Firebase Firestore database
-- Dynamic routing for single item view
+- Firebase Authentication (Email/Password & Google Sign-In)
+- Role-Based Protected Routing (Admin & User)
+- Secure CRUD Operations
+- Real-time Chat
 - Deployed on Vercel
 
 ## Technologies Used
 - React.js
+- Firebase (Firestore, Authentication)
 - React Router DOM
-- Firebase Firestore
 - Vercel (Deployment)
 
 ## How to Run Locally
