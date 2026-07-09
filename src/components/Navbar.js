@@ -20,7 +20,7 @@ function Navbar() {
 
       {/* Left - Logo + Links */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <span style={{ color: 'white', fontWeight: 'bold', fontSize: '20px', marginRight: '20px' }}>🔥 Mine Chat</span>
+        <span style={{ color: 'white', fontWeight: 'bold', fontSize: '20px', marginRight: '20px' }}>🔗 Nexus</span>
         <Link to="/" style={{ color: 'rgba(255,255,255,0.85)', margin: '5px 10px', textDecoration: 'none', fontWeight: '500' }}>Home</Link>
         {currentUser && (
           <>

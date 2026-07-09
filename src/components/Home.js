@@ -10,8 +10,8 @@ function Home() {
 
       {/* Hero Section */}
       <div style={{ background: 'linear-gradient(135deg, #4f46e5, #7c3aed)', padding: '80px 30px', textAlign: 'center', color: 'white' }}>
-        <h1 style={{ fontSize: '48px', margin: '0 0 15px' }}>🔥 Mine Chat </h1>
-        <p style={{ fontSize: '20px', opacity: 0.85, marginBottom: '35px' }}>A simple and powerful CRUD application using React & Firebase</p>
+        <h1 style={{ fontSize: '48px', margin: '0 0 15px' }}>🔗 Nexus</h1>
+        <p style={{ fontSize: '20px', opacity: 0.85, marginBottom: '35px' }}>A secure team task & collaboration platform — manage tasks, assign work, and chat with your team in real time.</p>
         {currentUser ? (
           <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link to="/create">
