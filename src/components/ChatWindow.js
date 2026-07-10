@@ -8,9 +8,12 @@ import {
   onSnapshot,
   or,
   and,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 const ChatWindow = ({ selectedUser }) => {
   const [messages, setMessages] = useState([]);
+  const [hovered, setHovered] = useState(null);
   const bottomRef = useRef(null);
   useEffect(() => {
     if (!selectedUser) return;
@@ -38,6 +41,15 @@ const ChatWindow = ({ selectedUser }) => {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+  const handleDelete = async (id) => {
+    if (!window.confirm("Delete this message?")) return;
+    try {
+      await deleteDoc(doc(db, "messages", id));
+    } catch (err) {
+      console.error("Error deleting message:", err);
+      alert("Could not delete message.");
+    }
+  };
   if (!selectedUser) {
     return (
       <div className="chat-messages" style={{ alignItems: "center", justifyContent: "center" }}>
@@ -71,20 +83,36 @@ const ChatWindow = ({ selectedUser }) => {
         {messages.map((msg) => {
           const isMine = msg.senderId === auth.currentUser?.uid;
           return (
-            <div key={msg.id} style={{ display: "flex", flexDirection: "column", alignItems: isMine ? "flex-end" : "flex-start" }}>
-              <div style={{
-                maxWidth: "65%",
-                padding: "10px 16px",
-                borderRadius: isMine ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
-                background: isMine ? "#2563EB" : "#1F1F23",
-                color: isMine ? "#fff" : "#E5E5E7",
-                fontSize: "14px",
-                border: msg.flagged ? "1px solid #EAB308" : (isMine ? "none" : "1px solid #27272A"),
-              }}>
-                <p style={{ margin: 0 }}>{msg.text}</p>
-                <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "rgba(255,255,255,0.7)" : "#71717A", textAlign: "right" }}>
-                  {msg.timestamp?.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                </p>
+            <div
+              key={msg.id}
+              onMouseEnter={() => setHovered(msg.id)}
+              onMouseLeave={() => setHovered(null)}
+              style={{ display: "flex", flexDirection: "column", alignItems: isMine ? "flex-end" : "flex-start" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", flexDirection: isMine ? "row" : "row-reverse" }}>
+                {isMine && hovered === msg.id && (
+                  <button
+                    onClick={() => handleDelete(msg.id)}
+                    title="Delete message"
+                    style={{ background: "transparent", border: "none", color: "#71717A", cursor: "pointer", fontSize: "16px", lineHeight: 1, padding: "2px 4px" }}
+                  >
+                    ×
+                  </button>
+                )}
+                <div style={{
+                  maxWidth: "65%",
+                  padding: "10px 16px",
+                  borderRadius: isMine ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
+                  background: isMine ? "#2563EB" : "#1F1F23",
+                  color: isMine ? "#fff" : "#E5E5E7",
+                  fontSize: "14px",
+                  border: msg.flagged ? "1px solid #EAB308" : (isMine ? "none" : "1px solid #27272A"),
+                }}>
+                  <p style={{ margin: 0 }}>{msg.text}</p>
+                  <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "rgba(255,255,255,0.7)" : "#71717A", textAlign: "right" }}>
+                    {msg.timestamp?.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </div>
               </div>
               {msg.flagged && isMine && (
                 <p style={{ margin: "4px 4px 0 0", fontSize: "11px", color: "#EAB308" }}>
