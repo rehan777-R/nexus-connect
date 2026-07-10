@@ -33,67 +33,63 @@ function CreateItem() {
     setLoading(false);
   };
 
-  return (
-    <div style={{ minHeight: '100vh', background: '#f0f2f5', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px' }}>
-      <div style={{ background: 'white', padding: '40px', borderRadius: '15px', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', width: '100%', maxWidth: '500px' }}>
+  const labelStyle = { display: 'block', marginBottom: '8px', color: '#A1A1AA', fontWeight: 500, fontSize: '13px' };
+  const inputStyle = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid #27272A', background: '#0A0A0B', color: '#E5E5E7', fontSize: '14px', fontFamily: 'Inter, sans-serif', outline: 'none' };
 
-        <h2 style={{ textAlign: 'center', color: '#333', marginBottom: '30px', fontSize: '26px' }}>➕ Create New Task</h2>
+  return (
+    <div style={{ minHeight: '100vh', background: '#0A0A0B', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px' }}>
+      <div style={{ background: '#111113', padding: '40px', borderRadius: '12px', border: '1px solid #1F1F23', width: '100%', maxWidth: '500px' }}>
+
+        <h2 style={{ color: '#E5E5E7', marginBottom: '4px', fontSize: '22px', fontWeight: 600 }}>Create New Task</h2>
+        <p style={{ color: '#71717A', marginTop: 0, marginBottom: '28px', fontSize: '14px' }}>Add a task to your team's board.</p>
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '6px', color: '#555', fontWeight: 'bold' }}>Title</label>
+            <label style={labelStyle}>Title</label>
             <input
               type="text"
               placeholder="Enter task title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              style={{ width: '93%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px' }}
+              style={inputStyle}
             />
           </div>
           <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '6px', color: '#555', fontWeight: 'bold' }}>Description</label>
+            <label style={labelStyle}>Description</label>
             <textarea
               placeholder="Enter task description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
               rows="5"
-              style={{ width: '93%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px', resize: 'vertical' }}
+              style={{ ...inputStyle, resize: 'vertical' }}
             />
           </div>
-          <div style={{ display: 'flex', gap: '15px', marginBottom: '25px' }}>
+          <div style={{ display: 'flex', gap: '15px', marginBottom: '28px' }}>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', marginBottom: '6px', color: '#555', fontWeight: 'bold' }}>Status</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px', background: 'white' }}
-              >
+              <label style={labelStyle}>Status</label>
+              <select value={status} onChange={(e) => setStatus(e.target.value)} style={inputStyle}>
                 <option value="To Do">To Do</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Done">Done</option>
               </select>
             </div>
             <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', marginBottom: '6px', color: '#555', fontWeight: 'bold' }}>Priority</label>
-              <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-                style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px', background: 'white' }}
-              >
+              <label style={labelStyle}>Priority</label>
+              <select value={priority} onChange={(e) => setPriority(e.target.value)} style={inputStyle}>
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
               </select>
             </div>
           </div>
-          <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px', background: '#4f46e5', color: 'white', border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' }}>
-            {loading ? 'Creating...' : '✅ Create Task'}
+          <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px', background: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: loading ? 'default' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+            {loading ? 'Creating...' : 'Create Task'}
           </button>
         </form>
-        <button onClick={() => navigate('/items')} style={{ width: '100%', padding: '12px', background: 'transparent', color: '#4f46e5', border: '1px solid #4f46e5', borderRadius: '8px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer', marginTop: '15px' }}>
-          ← Back to Tasks
+        <button onClick={() => navigate('/items')} style={{ width: '100%', padding: '12px', background: 'transparent', color: '#A1A1AA', border: '1px solid #27272A', borderRadius: '8px', fontSize: '14px', fontWeight: 500, cursor: 'pointer', marginTop: '12px' }}>
+          Back to Tasks
         </button>
       </div>
     </div>

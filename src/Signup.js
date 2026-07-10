@@ -54,55 +54,54 @@ export default function Signup() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0f2f5", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ background: "white", padding: "40px", borderRadius: "15px", boxShadow: "0 4px 20px rgba(0,0,0,0.1)", width: "100%", maxWidth: "400px" }}>
-        <h2 style={{ textAlign: "center", marginBottom: "30px", color: "#333", fontSize: "28px" }}>Create Account 🚀</h2>
-        {error && <p style={{ background: "#ffe0e0", color: "red", padding: "10px", borderRadius: "8px", textAlign: "center" }}>{error}</p>}
+    <div style={{ minHeight: "100vh", background: "#0A0A0B", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "#111113", border: "1px solid #1F1F23", padding: "36px", borderRadius: "12px", width: "100%", maxWidth: "380px" }}>
+        <h2 style={{ textAlign: "center", marginBottom: "26px", color: "white", fontSize: "22px", fontWeight: "600" }}>Create your account</h2>
+        {error && <p style={{ background: "rgba(239,68,68,0.1)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.3)", padding: "10px", borderRadius: "8px", textAlign: "center", fontSize: "13.5px" }}>{error}</p>}
         <form onSubmit={handleSignup}>
-          <div style={{ marginBottom: "20px" }}>
-            <label style={{ display: "block", marginBottom: "6px", color: "#555", fontWeight: "bold" }}>Email</label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={{ display: "block", marginBottom: "6px", color: "#A1A1AA", fontWeight: "500", fontSize: "13px" }}>Email</label>
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="you@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ width: "93%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "15px" }}
             />
           </div>
-          <div style={{ marginBottom: "20px" }}>
-            <label style={{ display: "block", marginBottom: "6px", color: "#555", fontWeight: "bold" }}>Password</label>
+          <div style={{ marginBottom: "18px" }}>
+            <label style={{ display: "block", marginBottom: "6px", color: "#A1A1AA", fontWeight: "500", fontSize: "13px" }}>Password</label>
             <input
               type="password"
               placeholder="Min 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{ width: "93%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "15px" }}
             />
           </div>
-          <button disabled={loading} type="submit" style={{ width: "100%", padding: "12px", background: "#4f46e5", color: "white", border: "none", borderRadius: "8px", fontSize: "16px", cursor: "pointer", fontWeight: "bold" }}>
-            {loading ? "Creating Account..." : "Sign Up"}
+          <button disabled={loading} type="submit" className="btn-primary" style={{ width: "100%", padding: "11px", fontSize: "14px" }}>
+            {loading ? "Creating account..." : "Sign up"}
           </button>
         </form>
 
-        <div style={{ display: "flex", alignItems: "center", margin: "20px 0" }}>
-          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #ddd" }} />
-          <span style={{ margin: "0 10px", color: "#aaa", fontSize: "14px" }}>OR</span>
-          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #ddd" }} />
+        <div style={{ display: "flex", alignItems: "center", margin: "18px 0" }}>
+          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #1F1F23" }} />
+          <span style={{ margin: "0 10px", color: "#52525B", fontSize: "12px" }}>OR</span>
+          <hr style={{ flex: 1, border: "none", borderTop: "1px solid #1F1F23" }} />
         </div>
 
         <button
           onClick={handleGoogleSignup}
           disabled={loading}
-          style={{ width: "100%", padding: "12px", background: "white", color: "#333", border: "1px solid #ddd", borderRadius: "8px", fontSize: "16px", cursor: "pointer", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
+          className="btn-secondary"
+          style={{ width: "100%", padding: "11px", fontSize: "13.5px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
         >
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "20px" }} />
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: "18px" }} />
           Continue with Google
         </button>
 
-        <p style={{ textAlign: "center", marginTop: "20px", color: "#555" }}>
-          Already have an account? <Link to="/login" style={{ color: "#4f46e5", fontWeight: "bold" }}>Login</Link>
+        <p style={{ textAlign: "center", marginTop: "18px", color: "#71717A", fontSize: "13px" }}>
+          Already have an account? <Link to="/login" style={{ color: "#2563EB", fontWeight: "500" }}>Login</Link>
         </p>
       </div>
     </div>

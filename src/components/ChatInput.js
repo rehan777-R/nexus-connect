@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { db, auth } from "../firebase";
 import { collection, addDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
-
 // Message bhejne ke baad background mein AI se check karwata hai
 // ke content appropriate hai ya nahi. Sending block nahi hoti - flag
 // baad mein silently apply ho jata hai agar zaroorat pade.
@@ -23,10 +22,8 @@ async function moderateInBackground(messageId, text) {
     console.error("Moderation check failed:", err);
   }
 }
-
 const ChatInput = ({ selectedUser }) => {
   const [text, setText] = useState("");
-
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() || !selectedUser) return;
@@ -46,9 +43,7 @@ const ChatInput = ({ selectedUser }) => {
       console.error("Error sending message:", err);
     }
   };
-
   if (!selectedUser) return null;
-
   return (
     <form onSubmit={sendMessage} className="chat-input-form">
       <input
@@ -62,10 +57,9 @@ const ChatInput = ({ selectedUser }) => {
         disabled={!text.trim()}
         className="chat-send-btn"
       >
-        ➤
+        Send
       </button>
     </form>
   );
 };
-
 export default ChatInput;

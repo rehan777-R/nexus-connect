@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
-
 const UsersList = ({ onSelectUser, selectedUser }) => {
   const [users, setUsers] = useState([]);
-
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "users"), (snapshot) => {
       const list = snapshot.docs
@@ -14,31 +12,30 @@ const UsersList = ({ onSelectUser, selectedUser }) => {
     });
     return () => unsub();
   }, []);
-
   return (
     <div className="chat-sidebar">
-      <h2>💬 Chats</h2>
+      <h2>Chats</h2>
       {users.length === 0 && (
-        <p style={{ color: "#6b7280", fontSize: "14px" }}>No other users found</p>
+        <p style={{ color: "#71717A", fontSize: "14px" }}>No other users found</p>
       )}
       {users.map((user) => (
         <div
           key={user.id}
           onClick={() => onSelectUser(user)}
           className="chat-user-item"
-          style={{ background: selectedUser?.id === user.id ? "#4f46e5" : "#1f2937" }}
+          style={{ background: selectedUser?.id === user.id ? "#2563EB" : "#1F1F23", border: "1px solid #27272A" }}
         >
           <div
             className="chat-user-avatar"
-            style={{ background: selectedUser?.id === user.id ? "#818cf8" : "#374151" }}
+            style={{ background: selectedUser?.id === user.id ? "#3B82F6" : "#27272A", color: "#E5E5E7" }}
           >
             {user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
           </div>
           <div style={{ overflow: "hidden" }}>
-            <p style={{ color: "white", fontSize: "14px", fontWeight: "600", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            <p style={{ color: selectedUser?.id === user.id ? "white" : "#E5E5E7", fontSize: "14px", fontWeight: "600", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {user.displayName || "User"}
             </p>
-            <p style={{ color: "#9ca3af", fontSize: "12px", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            <p style={{ color: selectedUser?.id === user.id ? "rgba(255,255,255,0.7)" : "#A1A1AA", fontSize: "12px", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {user.email}
             </p>
           </div>
@@ -47,5 +44,4 @@ const UsersList = ({ onSelectUser, selectedUser }) => {
     </div>
   );
 };
-
 export default UsersList;

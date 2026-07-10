@@ -9,11 +9,9 @@ import {
   or,
   and,
 } from "firebase/firestore";
-
 const ChatWindow = ({ selectedUser }) => {
   const [messages, setMessages] = useState([]);
   const bottomRef = useRef(null);
-
   useEffect(() => {
     if (!selectedUser) return;
     const currentUid = auth.currentUser?.uid;
@@ -37,31 +35,28 @@ const ChatWindow = ({ selectedUser }) => {
     });
     return () => unsub();
   }, [selectedUser]);
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
   if (!selectedUser) {
     return (
       <div className="chat-messages" style={{ alignItems: "center", justifyContent: "center" }}>
-        <p style={{ color: "#9ca3af", fontSize: "18px" }}>Select a user to start chatting 💬</p>
+        <p style={{ color: "#71717A", fontSize: "15px" }}>Select a user to start chatting</p>
       </div>
     );
   }
-
   return (
     <>
       {/* Header */}
       <div className="chat-header">
-        <div className="chat-user-avatar" style={{ background: "#4f46e5" }}>
+        <div className="chat-user-avatar" style={{ background: "#2563EB", color: "#fff" }}>
           {selectedUser.displayName?.[0]?.toUpperCase() || selectedUser.email?.[0]?.toUpperCase()}
         </div>
         <div>
-          <p style={{ color: "white", fontWeight: "600", margin: 0 }}>
+          <p style={{ color: "#E5E5E7", fontWeight: "600", margin: 0 }}>
             {selectedUser.displayName || "User"}
           </p>
-          <p style={{ color: "#9ca3af", fontSize: "12px", margin: 0 }}>
+          <p style={{ color: "#A1A1AA", fontSize: "12px", margin: 0 }}>
             {selectedUser.email}
           </p>
         </div>
@@ -69,8 +64,8 @@ const ChatWindow = ({ selectedUser }) => {
       {/* Messages */}
       <div className="chat-messages">
         {messages.length === 0 && (
-          <p style={{ textAlign: "center", color: "#6b7280", fontSize: "14px", marginTop: "40px" }}>
-            No messages yet. Say hi! 👋
+          <p style={{ textAlign: "center", color: "#71717A", fontSize: "14px", marginTop: "40px" }}>
+            No messages yet. Say hi!
           </p>
         )}
         {messages.map((msg) => {
@@ -80,20 +75,20 @@ const ChatWindow = ({ selectedUser }) => {
               <div style={{
                 maxWidth: "65%",
                 padding: "10px 16px",
-                borderRadius: isMine ? "18px 18px 4px 18px" : "18px 18px 18px 4px",
-                background: isMine ? "#4f46e5" : "#374151",
-                color: "white",
+                borderRadius: isMine ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
+                background: isMine ? "#2563EB" : "#1F1F23",
+                color: isMine ? "#fff" : "#E5E5E7",
                 fontSize: "14px",
-                border: msg.flagged ? "2px solid #f59e0b" : "none",
+                border: msg.flagged ? "1px solid #EAB308" : (isMine ? "none" : "1px solid #27272A"),
               }}>
                 <p style={{ margin: 0 }}>{msg.text}</p>
-                <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "#c7d2fe" : "#9ca3af", textAlign: "right" }}>
+                <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "rgba(255,255,255,0.7)" : "#71717A", textAlign: "right" }}>
                   {msg.timestamp?.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </p>
               </div>
               {msg.flagged && isMine && (
-                <p style={{ margin: "4px 4px 0 0", fontSize: "11px", color: "#f59e0b" }}>
-                  ⚠️ Flagged for review by AI moderation
+                <p style={{ margin: "4px 4px 0 0", fontSize: "11px", color: "#EAB308" }}>
+                  Flagged for review by AI moderation
                 </p>
               )}
             </div>
@@ -104,5 +99,4 @@ const ChatWindow = ({ selectedUser }) => {
     </>
   );
 };
-
 export default ChatWindow;

@@ -11,52 +11,45 @@ export default function UserDashboard() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0f2f5", padding: "30px" }}>
+    <div style={{ minHeight: "100vh", background: "#0A0A0B", padding: "30px" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-
         {/* Header */}
-        <div style={{ background: "#4f46e5", borderRadius: "15px", padding: "30px", color: "white", marginBottom: "30px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ background: "#111113", border: "1px solid #1F1F23", borderRadius: "12px", padding: "26px 30px", marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: "28px" }}>👤 User Dashboard</h1>
-            <p style={{ margin: "8px 0 0", opacity: 0.85 }}>{currentUser?.email}</p>
+            <h1 style={{ margin: 0, fontSize: "22px", color: "white", fontWeight: "600" }}>Your dashboard</h1>
+            <p style={{ margin: "6px 0 0", color: "#71717A", fontSize: "13.5px" }}>{currentUser?.email}</p>
           </div>
-          <button onClick={handleLogout} style={{ background: "white", color: "#4f46e5", border: "none", padding: "10px 20px", borderRadius: "8px", fontWeight: "bold", cursor: "pointer" }}>
+          <button onClick={handleLogout} className="btn-secondary">
             Logout
           </button>
         </div>
-
         {/* Cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginBottom: "30px" }}>
-          <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", textAlign: "center" }}>
-            <div style={{ fontSize: "40px" }}>📦</div>
-            <h3 style={{ color: "#4f46e5", margin: "10px 0 5px" }}>My Tasks</h3>
-            <p style={{ color: "#888", margin: 0 }}>View your items</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px", marginBottom: "24px" }}>
+          <div style={{ background: "#111113", border: "1px solid #1F1F23", borderRadius: "10px", padding: "22px" }}>
+            <h3 style={{ color: "white", margin: "0 0 5px", fontSize: "15px", fontWeight: "600" }}>My tasks</h3>
+            <p style={{ color: "#71717A", margin: 0, fontSize: "13px" }}>View your assigned work</p>
           </div>
-          <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", textAlign: "center" }}>
-            <div style={{ fontSize: "40px" }}>➕</div>
-            <h3 style={{ color: "#4f46e5", margin: "10px 0 5px" }}>Create Task</h3>
-            <p style={{ color: "#888", margin: 0 }}>Add new item</p>
+          <div style={{ background: "#111113", border: "1px solid #1F1F23", borderRadius: "10px", padding: "22px" }}>
+            <h3 style={{ color: "white", margin: "0 0 5px", fontSize: "15px", fontWeight: "600" }}>Create task</h3>
+            <p style={{ color: "#71717A", margin: 0, fontSize: "13px" }}>Add something new</p>
           </div>
-          <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", textAlign: "center" }}>
-            <div style={{ fontSize: "40px" }}>💬</div>
-            <h3 style={{ color: "#4f46e5", margin: "10px 0 5px" }}>Chat</h3>
-            <p style={{ color: "#888", margin: 0 }}>Message users</p>
+          <div style={{ background: "#111113", border: "1px solid #1F1F23", borderRadius: "10px", padding: "22px" }}>
+            <h3 style={{ color: "white", margin: "0 0 5px", fontSize: "15px", fontWeight: "600" }}>Chat</h3>
+            <p style={{ color: "#71717A", margin: 0, fontSize: "13px" }}>Message your team</p>
           </div>
         </div>
-
         {/* Quick Actions */}
-        <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)" }}>
-          <h3 style={{ color: "#333", marginTop: 0 }}>Quick Actions</h3>
-          <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
-            <button onClick={() => navigate("/items")} style={{ padding: "10px 20px", background: "#4f46e5", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
-              View All Tasks
+        <div style={{ background: "#111113", border: "1px solid #1F1F23", borderRadius: "12px", padding: "24px" }}>
+          <h3 style={{ color: "white", marginTop: 0, fontSize: "15px", fontWeight: "600", marginBottom: "16px" }}>Quick actions</h3>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <button onClick={() => navigate("/items")} className="btn-primary">
+              View all tasks
             </button>
-            <button onClick={() => navigate("/create")} style={{ padding: "10px 20px", background: "#10b981", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
-              Create New Task
+            <button onClick={() => navigate("/create")} className="btn-secondary">
+              Create new task
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

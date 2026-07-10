@@ -13,7 +13,6 @@ export default function Login() {
   const { login, googleLogin } = useAuth();
   const navigate = useNavigate();
 
-  // ← YEH FUNCTION ADD HUA
   async function saveUserToFirestore(user) {
     await setDoc(
       doc(db, "users", user.uid),
@@ -33,7 +32,7 @@ export default function Login() {
     setLoading(true);
     try {
       const result = await login(email, password);
-      await saveUserToFirestore(result.user); // ← YEH ADD HUA
+      await saveUserToFirestore(result.user);
       navigate("/dashboard");
     } catch (err) {
       setError("Invalid email or password!");
@@ -45,7 +44,7 @@ export default function Login() {
     setError("");
     try {
       const result = await googleLogin();
-      await saveUserToFirestore(result.user); // ← YEH ADD HUA
+      await saveUserToFirestore(result.user);
       navigate("/dashboard");
     } catch (err) {
       setError("Google Sign-In failed!");
@@ -53,46 +52,44 @@ export default function Login() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f0f2f5", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ background: "white", padding: "40px", borderRadius: "15px", boxShadow: "0 4px 20px rgba(0,0,0,0.1)", width: "100%", maxWidth: "400px" }}>
-        <h2 style={{ textAlign: "center", marginBottom: "30px", color: "#333", fontSize: "28px" }}>Welcome Back 👋</h2>
-        {error && <p style={{ background: "#ffe0e0", color: "red", padding: "10px", borderRadius: "8px", textAlign: "center" }}>{error}</p>}
+    <div style={{ minHeight: "100vh", background: "#0A0A0B", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "#111113", border: "1px solid #1F1F23", padding: "36px", borderRadius: "12px", width: "100%", maxWidth: "380px" }}>
+        <h2 style={{ textAlign: "center", marginBottom: "26px", color: "white", fontSize: "22px", fontWeight: "600" }}>Welcome back</h2>
+        {error && <p style={{ background: "rgba(239,68,68,0.1)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.3)", padding: "10px", borderRadius: "8px", textAlign: "center", fontSize: "13.5px" }}>{error}</p>}
         <form onSubmit={handleLogin}>
-          <div style={{ marginBottom: "20px" }}>
-            <label style={{ display: "block", marginBottom: "6px", color: "#555", fontWeight: "bold" }}>Email</label>
+          <div style={{ marginBottom: "16px" }}>
+            <label style={{ display: "block", marginBottom: "6px", color: "#A1A1AA", fontWeight: "500", fontSize: "13px" }}>Email</label>
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="you@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={{ width: "93%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "15px" }}
             />
           </div>
-          <div style={{ marginBottom: "20px" }}>
-            <label style={{ display: "block", marginBottom: "6px", color: "#555", fontWeight: "bold" }}>Password</label>
+          <div style={{ marginBottom: "18px" }}>
+            <label style={{ display: "block", marginBottom: "6px", color: "#A1A1AA", fontWeight: "500", fontSize: "13px" }}>Password</label>
             <input
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={{ width: "93%", padding: "12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "15px" }}
             />
           </div>
-          <button disabled={loading} type="submit" style={{ width: "100%", padding: "12px", background: "#4f46e5", color: "white", border: "none", borderRadius: "8px", fontSize: "16px", cursor: "pointer", fontWeight: "bold" }}>
+          <button disabled={loading} type="submit" className="btn-primary" style={{ width: "100%", padding: "11px", fontSize: "14px" }}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-        <div style={{ margin: "20px 0", textAlign: "center", color: "#aaa" }}>— OR —</div>
-        <button onClick={handleGoogle} style={{ width: "100%", padding: "12px", background: "white", color: "#333", border: "1px solid #ddd", borderRadius: "8px", fontSize: "15px", cursor: "pointer", fontWeight: "bold", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
-          🔵 Sign in with Google
+        <div style={{ margin: "18px 0", textAlign: "center", color: "#52525B", fontSize: "12px" }}>OR</div>
+        <button onClick={handleGoogle} className="btn-secondary" style={{ width: "100%", padding: "11px", fontSize: "13.5px" }}>
+          Sign in with Google
         </button>
-        <p style={{ textAlign: "center", marginTop: "20px", color: "#555" }}>
-          <Link to="/forgot-password" style={{ color: "#4f46e5" }}>Forgot Password?</Link>
+        <p style={{ textAlign: "center", marginTop: "18px", fontSize: "13px" }}>
+          <Link to="/forgot-password" style={{ color: "#71717A" }}>Forgot password?</Link>
         </p>
-        <p style={{ textAlign: "center", color: "#555" }}>
-          No account? <Link to="/signup" style={{ color: "#4f46e5", fontWeight: "bold" }}>Sign Up</Link>
+        <p style={{ textAlign: "center", color: "#71717A", fontSize: "13px" }}>
+          No account? <Link to="/signup" style={{ color: "#2563EB", fontWeight: "500" }}>Sign up</Link>
         </p>
       </div>
     </div>
