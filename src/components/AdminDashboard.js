@@ -63,7 +63,7 @@ export default function AdminDashboard() {
           <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", textAlign: "center" }}>
             <div style={{ fontSize: "40px" }}>📦</div>
             <h2 style={{ color: "#f59e0b", margin: "10px 0 5px" }}>{items.length}</h2>
-            <p style={{ color: "#888", margin: 0 }}>Total Items</p>
+            <p style={{ color: "#888", margin: 0 }}>Total Tasks</p>
           </div>
         </div>
 
@@ -99,10 +99,10 @@ export default function AdminDashboard() {
           <h3 style={{ color: "#333", marginTop: 0 }}>Quick Actions</h3>
           <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
             <button onClick={() => navigate("/items")} style={{ padding: "10px 20px", background: "#4f46e5", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
-              Manage Items
+              Manage Tasks
             </button>
             <button onClick={() => navigate("/create")} style={{ padding: "10px 20px", background: "#10b981", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
-              Create Item
+              Create Task
             </button>
           </div>
         </div>

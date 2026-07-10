@@ -29,12 +29,12 @@ export default function UserDashboard() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px", marginBottom: "30px" }}>
           <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", textAlign: "center" }}>
             <div style={{ fontSize: "40px" }}>📦</div>
-            <h3 style={{ color: "#4f46e5", margin: "10px 0 5px" }}>My Items</h3>
+            <h3 style={{ color: "#4f46e5", margin: "10px 0 5px" }}>My Tasks</h3>
             <p style={{ color: "#888", margin: 0 }}>View your items</p>
           </div>
           <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", textAlign: "center" }}>
             <div style={{ fontSize: "40px" }}>➕</div>
-            <h3 style={{ color: "#4f46e5", margin: "10px 0 5px" }}>Create Item</h3>
+            <h3 style={{ color: "#4f46e5", margin: "10px 0 5px" }}>Create Task</h3>
             <p style={{ color: "#888", margin: 0 }}>Add new item</p>
           </div>
           <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", textAlign: "center" }}>
@@ -49,10 +49,10 @@ export default function UserDashboard() {
           <h3 style={{ color: "#333", marginTop: 0 }}>Quick Actions</h3>
           <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
             <button onClick={() => navigate("/items")} style={{ padding: "10px 20px", background: "#4f46e5", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
-              View All Items
+              View All Tasks
             </button>
             <button onClick={() => navigate("/create")} style={{ padding: "10px 20px", background: "#10b981", color: "white", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}>
-              Create New Item
+              Create New Task
             </button>
           </div>
         </div>

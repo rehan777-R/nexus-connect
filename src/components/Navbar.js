@@ -24,7 +24,7 @@ function Navbar() {
         <Link to="/" style={{ color: 'rgba(255,255,255,0.85)', margin: '5px 10px', textDecoration: 'none', fontWeight: '500' }}>Home</Link>
         {currentUser && (
           <>
-            <Link to="/items" style={{ color: 'rgba(255,255,255,0.85)', margin: '5px 10px', textDecoration: 'none', fontWeight: '500' }}>All Items</Link>
+            <Link to="/items" style={{ color: 'rgba(255,255,255,0.85)', margin: '5px 10px', textDecoration: 'none', fontWeight: '500' }}>All Tasks</Link>
             <Link to="/create" style={{ color: 'rgba(255,255,255,0.85)', margin: '5px 10px', textDecoration: 'none', fontWeight: '500' }}>Create Item</Link>
             <Link to="/dashboard" style={{ color: 'rgba(255,255,255,0.85)', margin: '5px 10px', textDecoration: 'none', fontWeight: '500' }}>Dashboard</Link>
             <Link to="/chat" style={{ color: 'rgba(255,255,255,0.85)', margin: '5px 10px', textDecoration: 'none', fontWeight: '500' }}>💬 Chat</Link> {/* ← YEH ADD HUA */}
