@@ -1,7 +1,7 @@
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 
 export default function AdminDashboard() {
@@ -9,13 +9,19 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [items, setItems] = useState([]);
+  const [flaggedMessages, setFlaggedMessages] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       const usersSnap = await getDocs(collection(db, "users"));
       const itemsSnap = await getDocs(collection(db, "items"));
-      setUsers(usersSnap.docs.map(doc => doc.data()));
+      const usersList = usersSnap.docs.map(doc => doc.data());
+      setUsers(usersList);
       setItems(itemsSnap.docs.map(doc => doc.data()));
+
+      const flaggedQuery = query(collection(db, "messages"), where("flagged", "==", true));
+      const flaggedSnap = await getDocs(flaggedQuery);
+      setFlaggedMessages(flaggedSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     }
     fetchData();
   }, []);
@@ -27,6 +33,10 @@ export default function AdminDashboard() {
 
   const adminCount = users.filter(u => u.role === "admin").length;
   const userCount = users.filter(u => u.role === "user").length;
+
+  // uid -> email lookup taake flagged messages mein readable naam dikhein
+  const emailByUid = {};
+  users.forEach(u => { emailByUid[u.uid] = u.email; });
 
   return (
     <div style={{ minHeight: "100vh", background: "#f0f2f5", padding: "30px" }}>
@@ -65,6 +75,38 @@ export default function AdminDashboard() {
             <h2 style={{ color: "#f59e0b", margin: "10px 0 5px" }}>{items.length}</h2>
             <p style={{ color: "#888", margin: 0 }}>Total Tasks</p>
           </div>
+          <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", textAlign: "center" }}>
+            <div style={{ fontSize: "40px" }}>⚠️</div>
+            <h2 style={{ color: "#ef4444", margin: "10px 0 5px" }}>{flaggedMessages.length}</h2>
+            <p style={{ color: "#888", margin: 0 }}>Flagged Messages</p>
+          </div>
+        </div>
+
+        {/* Flagged Messages */}
+        <div style={{ background: "white", borderRadius: "12px", padding: "25px", boxShadow: "0 2px 10px rgba(0,0,0,0.08)", marginBottom: "20px" }}>
+          <h3 style={{ color: "#333", marginTop: 0 }}>⚠️ Flagged Messages (AI Moderation)</h3>
+          {flaggedMessages.length === 0 ? (
+            <p style={{ color: "#888", fontSize: "14px" }}>No flagged messages. Team chat looks clean! ✅</p>
+          ) : (
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ background: "#fef2f2" }}>
+                  <th style={{ padding: "12px", textAlign: "left", color: "#555" }}>From</th>
+                  <th style={{ padding: "12px", textAlign: "left", color: "#555" }}>Message</th>
+                  <th style={{ padding: "12px", textAlign: "left", color: "#555" }}>AI Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                {flaggedMessages.map((msg) => (
+                  <tr key={msg.id} style={{ borderTop: "1px solid #eee" }}>
+                    <td style={{ padding: "12px", color: "#333", fontSize: "13px" }}>{emailByUid[msg.senderId] || "Unknown"}</td>
+                    <td style={{ padding: "12px", color: "#333", fontSize: "13px" }}>{msg.text}</td>
+                    <td style={{ padding: "12px", color: "#dc2626", fontSize: "13px" }}>{msg.flagReason || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Users Table */}

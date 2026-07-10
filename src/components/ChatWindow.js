@@ -16,10 +16,8 @@ const ChatWindow = ({ selectedUser }) => {
 
   useEffect(() => {
     if (!selectedUser) return;
-
     const currentUid = auth.currentUser?.uid;
     const otherUid = selectedUser.id;
-
     const q = query(
       collection(db, "messages"),
       or(
@@ -34,11 +32,9 @@ const ChatWindow = ({ selectedUser }) => {
       ),
       orderBy("timestamp", "asc")
     );
-
     const unsub = onSnapshot(q, (snapshot) => {
       setMessages(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
-
     return () => unsub();
   }, [selectedUser]);
 
@@ -70,7 +66,6 @@ const ChatWindow = ({ selectedUser }) => {
           </p>
         </div>
       </div>
-
       {/* Messages */}
       <div className="chat-messages">
         {messages.length === 0 && (
@@ -81,7 +76,7 @@ const ChatWindow = ({ selectedUser }) => {
         {messages.map((msg) => {
           const isMine = msg.senderId === auth.currentUser?.uid;
           return (
-            <div key={msg.id} style={{ display: "flex", justifyContent: isMine ? "flex-end" : "flex-start" }}>
+            <div key={msg.id} style={{ display: "flex", flexDirection: "column", alignItems: isMine ? "flex-end" : "flex-start" }}>
               <div style={{
                 maxWidth: "65%",
                 padding: "10px 16px",
@@ -89,12 +84,18 @@ const ChatWindow = ({ selectedUser }) => {
                 background: isMine ? "#4f46e5" : "#374151",
                 color: "white",
                 fontSize: "14px",
+                border: msg.flagged ? "2px solid #f59e0b" : "none",
               }}>
                 <p style={{ margin: 0 }}>{msg.text}</p>
                 <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "#c7d2fe" : "#9ca3af", textAlign: "right" }}>
                   {msg.timestamp?.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </p>
               </div>
+              {msg.flagged && isMine && (
+                <p style={{ margin: "4px 4px 0 0", fontSize: "11px", color: "#f59e0b" }}>
+                  ⚠️ Flagged for review by AI moderation
+                </p>
+              )}
             </div>
           );
         })}
