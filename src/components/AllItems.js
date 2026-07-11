@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, addDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -16,6 +16,14 @@ const STATUS_COLORS = {
   'Done': { bg: 'rgba(34,197,94,0.12)', text: '#22C55E' },
 };
 
+const SAMPLE_TASKS = [
+  { title: 'Design landing page mockup', description: 'Create the hero section and pricing layout in Figma for client review.', status: 'In Progress', priority: 'High' },
+  { title: 'Set up CI/CD pipeline', description: 'Configure automatic deployments to Vercel on every push to master.', status: 'To Do', priority: 'Medium' },
+  { title: 'Write API documentation', description: 'Document all REST endpoints with request/response examples.', status: 'To Do', priority: 'Low' },
+  { title: 'Fix mobile navbar overlap', description: 'Navbar links overlap the logo on screens under 400px wide.', status: 'Done', priority: 'High' },
+  { title: 'Team sync meeting notes', description: 'Share weekly standup notes and blockers with the team.', status: 'Done', priority: 'Low' },
+];
+
 function Badge({ label, colors }) {
   if (!label || !colors) return null;
   return (
@@ -27,6 +35,7 @@ function Badge({ label, colors }) {
 
 function AllItems() {
   const [items, setItems] = useState([]);
+  const [loadingSamples, setLoadingSamples] = useState(false);
   const { currentUser, userRole } = useAuth();
 
   const fetchItems = async () => {
@@ -55,6 +64,24 @@ function AllItems() {
     }
   };
 
+  const loadSampleTasks = async () => {
+    setLoadingSamples(true);
+    try {
+      for (const t of SAMPLE_TASKS) {
+        await addDoc(collection(db, 'items'), {
+          ...t,
+          createdBy: currentUser.uid,
+          createdByEmail: currentUser.email,
+          createdAt: new Date().toISOString(),
+        });
+      }
+      await fetchItems();
+    } catch (err) {
+      console.error('Error loading sample tasks:', err);
+    }
+    setLoadingSamples(false);
+  };
+
   return (
     <div style={{ minHeight: '100vh', background: '#0A0A0B', padding: '30px' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -69,11 +96,16 @@ function AllItems() {
         {items.length === 0 ? (
           <div style={{ background: '#111113', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid #1F1F23' }}>
             <p style={{ color: '#71717A', fontSize: '15px', marginBottom: '20px' }}>No tasks found.</p>
-            <Link to="/create">
-              <button style={{ padding: '10px 18px', background: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer'}}>
-                Create First Task
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+              <Link to="/create">
+                <button style={{ padding: '10px 18px', background: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer'}}>
+                  Create First Task
+                </button>
+              </Link>
+              <button onClick={loadSampleTasks} disabled={loadingSamples} style={{ padding: '10px 18px', background: 'transparent', color: '#A1A1AA', border: '1px solid #27272A', borderRadius: '8px', fontWeight: 500, fontSize: '14px', cursor: loadingSamples ? 'default' : 'pointer', opacity: loadingSamples ? 0.7 : 1 }}>
+                {loadingSamples ? 'Loading...' : 'Load sample tasks'}
               </button>
-            </Link>
+            </div>
           </div>
         ) : (
           items.map((item) => (
