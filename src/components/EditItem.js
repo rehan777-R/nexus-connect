@@ -3,17 +3,20 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { useToast } from '../Toast';
 
 function EditItem() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('To Do');
   const [priority, setPriority] = useState('Medium');
+  const [dueDate, setDueDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
   const { currentUser, userRole } = useAuth();
+  const showToast = useToast();
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -29,6 +32,7 @@ function EditItem() {
         setDescription(data.description);
         setStatus(data.status || 'To Do');
         setPriority(data.priority || 'Medium');
+        setDueDate(data.dueDate || '');
       }
     };
     fetchItem();
@@ -44,7 +48,9 @@ function EditItem() {
         description: description,
         status: status,
         priority: priority,
+        dueDate: dueDate || null,
       });
+      showToast('Task updated');
       navigate('/items');
     } catch (error) {
       setError('Failed to update task. Try again!');
@@ -82,6 +88,15 @@ function EditItem() {
               required
               rows="5"
               style={{ ...inputStyle, resize: 'vertical' }}
+            />
+          </div>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={labelStyle}>Due date <span style={{ color: '#71717A', fontWeight: 400 }}>(optional)</span></label>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              style={{ ...inputStyle, colorScheme: 'dark' }}
             />
           </div>
           <div style={{ display: 'flex', gap: '15px', marginBottom: '28px' }}>

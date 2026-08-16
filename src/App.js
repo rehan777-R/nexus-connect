@@ -13,7 +13,10 @@ import ForgotPassword from './ForgotPassword';
 import AdminDashboard from './components/AdminDashboard';
 import UserDashboard from './components/UserDashboard';
 import { PrivateRoute, AdminRoute } from './ProtectedRoute';
-import Chat from './components/Chat';          // ← YEH ADD KAREIN
+import Chat from './components/Chat';
+import Board from './components/Board';
+import Assistant from './components/Assistant';
+import Profile from './components/Profile';
 
 function App() {
   return (
@@ -36,8 +39,13 @@ function App() {
         <Route path="/items/:id" element={<PrivateRoute><SingleItem /></PrivateRoute>} />
         <Route path="/edit/:id" element={<PrivateRoute><EditItem /></PrivateRoute>} />
 
-        {/* Chat Route */}                      {/* ← YEH ADD KAREIN */}
+        {/* Chat Route */}
         <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
+
+        {/* Board, AI Assistant & Profile */}
+        <Route path="/board" element={<PrivateRoute><Board /></PrivateRoute>} />
+        <Route path="/assistant" element={<PrivateRoute><Assistant /></PrivateRoute>} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       </Routes>
     </Router>
   );

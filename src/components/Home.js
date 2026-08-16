@@ -4,9 +4,11 @@ import { useAuth } from '../AuthContext';
 
 const features = [
   { title: 'Secure authentication', desc: 'Email and Google sign-in, role-based access.' },
-  { title: 'Task board', desc: 'Track work with status and priority, from to-do to done.' },
-  { title: 'Real-time chat', desc: 'Message your teammates instantly, no other app needed.' },
-  { title: 'AI moderation', desc: 'Chat is automatically screened to keep things professional.' },
+  { title: 'Kanban board', desc: 'Drag and drop tasks across columns, with priorities and due dates.' },
+  { title: 'Real-time chat', desc: 'Presence, typing indicators, reactions, and AI moderation built in.' },
+  { title: 'AI assistant', desc: 'Break goals into tasks and get workload summaries, powered by LLMs.' },
+  { title: 'Analytics dashboard', desc: 'Live charts of your progress, priorities, and overdue work.' },
+  { title: 'Admin controls', desc: 'User management and an AI moderation review queue for admins.' },
 ];
 
 function Home() {

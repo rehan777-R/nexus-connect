@@ -3,15 +3,18 @@ import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { useToast } from '../Toast';
 
 function CreateItem() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('To Do');
   const [priority, setPriority] = useState('Medium');
+  const [dueDate, setDueDate] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const showToast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,13 +25,16 @@ function CreateItem() {
         description: description,
         status: status,
         priority: priority,
+        dueDate: dueDate || null,
         createdBy: currentUser.uid,
         createdByEmail: currentUser.email,
         createdAt: new Date().toISOString()
       });
+      showToast('Task created');
       navigate('/items');
     } catch (error) {
       console.error('Error adding document: ', error);
+      showToast('Failed to create task', 'error');
     }
     setLoading(false);
   };
@@ -64,6 +70,15 @@ function CreateItem() {
               required
               rows="5"
               style={{ ...inputStyle, resize: 'vertical' }}
+            />
+          </div>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={labelStyle}>Due date <span style={{ color: '#71717A', fontWeight: 400 }}>(optional)</span></label>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              style={{ ...inputStyle, colorScheme: 'dark' }}
             />
           </div>
           <div style={{ display: 'flex', gap: '15px', marginBottom: '28px' }}>

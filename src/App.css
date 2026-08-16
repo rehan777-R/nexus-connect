@@ -255,6 +255,25 @@ button:hover {
   margin: 0 !important;
 }
 
+.typing-dots span {
+  animation: typing-blink 1.2s infinite;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing-blink {
+  0%, 60%, 100% { opacity: 0.25; }
+  30% { opacity: 1; }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .chat-send-btn {
   background: var(--accent) !important;
   color: white !important;

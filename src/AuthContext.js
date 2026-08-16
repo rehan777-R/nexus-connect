@@ -8,7 +8,7 @@ import {
   deleteUser,
   onAuthStateChanged
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { auth, googleProvider } from "./firebase";
 import { db } from "./firebase";
 import { saveUserToFirestore } from "./saveUser";
@@ -18,6 +18,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
   async function signup(email, password) {
@@ -49,24 +50,53 @@ export function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    let unsubProfile = null;
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+      if (unsubProfile) {
+        unsubProfile();
+        unsubProfile = null;
+      }
       if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          setUserRole(userDoc.data().role);
-        }
+        // Live subscription: profile edits (name, avatar) aur role changes turant reflect hon
+        unsubProfile = onSnapshot(doc(db, "users", user.uid), (snap) => {
+          if (snap.exists()) {
+            setUserRole(snap.data().role);
+            setUserProfile(snap.data());
+          }
+          setLoading(false);
+        });
       } else {
         setUserRole(null);
+        setUserProfile(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      if (unsubProfile) unsubProfile();
+    };
   }, []);
+
+  // Presence heartbeat: lastSeen har 45 second update hota hai jab tak app khula hai.
+  // Doosre users isse online/offline status dekhte hain.
+  useEffect(() => {
+    if (!currentUser) return;
+    const beat = () =>
+      setDoc(
+        doc(db, "users", currentUser.uid),
+        { lastSeen: new Date().toISOString() },
+        { merge: true }
+      ).catch(() => {});
+    beat();
+    const interval = setInterval(beat, 45 * 1000);
+    return () => clearInterval(interval);
+  }, [currentUser]);
 
 const value = {
     currentUser,
     userRole,
+    userProfile,
     loading,        // ← YEH ADD KAREIN
     signup,
     login,

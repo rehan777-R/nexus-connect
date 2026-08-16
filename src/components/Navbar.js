@@ -6,7 +6,7 @@ const linkStyle = { color: '#A1A1AA', margin: '0 4px', padding: '6px 10px', text
 const activeLinkStyle = { ...linkStyle, color: '#E5E5E7' };
 
 function Navbar() {
-  const { currentUser, userRole, logout } = useAuth();
+  const { currentUser, userRole, userProfile, logout } = useAuth();
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -32,9 +32,10 @@ function Navbar() {
         {currentUser && (
           <>
             <Link to="/items" style={linkStyle}>Tasks</Link>
-            <Link to="/create" style={linkStyle}>New task</Link>
+            <Link to="/board" style={linkStyle}>Board</Link>
             <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
             <Link to="/chat" style={linkStyle}>Chat</Link>
+            <Link to="/assistant" style={linkStyle}>AI Assistant</Link>
             {userRole === 'admin' && (
               <Link to="/admin" style={{ ...activeLinkStyle, color: '#EAB308' }}>Admin</Link>
             )}
@@ -45,7 +46,14 @@ function Navbar() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         {currentUser ? (
           <>
-            <span style={{ color: '#71717A', fontSize: '13px' }}>{currentUser.email}</span>
+            <Link to="/profile" title="Your profile" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: userProfile?.avatarColor || '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '12.5px', fontWeight: 700 }}>
+                {(userProfile?.displayName || currentUser.email)?.[0]?.toUpperCase()}
+              </div>
+              <span style={{ color: '#A1A1AA', fontSize: '13px' }}>
+                {userProfile?.displayName || currentUser.email}
+              </span>
+            </Link>
             <button onClick={handleLogout} className="btn-secondary">
               Logout
             </button>

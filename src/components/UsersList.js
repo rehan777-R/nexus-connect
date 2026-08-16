@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
+import { isOnline } from "./presence";
 const UsersList = ({ onSelectUser, selectedUser }) => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
@@ -25,11 +26,16 @@ const UsersList = ({ onSelectUser, selectedUser }) => {
           className="chat-user-item"
           style={{ background: selectedUser?.id === user.id ? "#2563EB" : "#1F1F23", border: "1px solid #27272A" }}
         >
-          <div
-            className="chat-user-avatar"
-            style={{ background: selectedUser?.id === user.id ? "#3B82F6" : "#27272A", color: "#E5E5E7" }}
-          >
-            {user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
+          <div style={{ position: "relative", flexShrink: 0 }}>
+            <div
+              className="chat-user-avatar"
+              style={{ background: selectedUser?.id === user.id ? "#3B82F6" : (user.avatarColor || "#27272A"), color: "#E5E5E7" }}
+            >
+              {user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
+            </div>
+            {isOnline(user) && (
+              <span style={{ position: "absolute", bottom: 0, right: 0, width: "10px", height: "10px", borderRadius: "50%", background: "#22C55E", border: "2px solid #111113" }} />
+            )}
           </div>
           <div style={{ overflow: "hidden" }}>
             <p style={{ color: selectedUser?.id === user.id ? "white" : "#E5E5E7", fontSize: "14px", fontWeight: "600", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
