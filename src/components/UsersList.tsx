@@ -36,13 +36,11 @@ const UsersList = ({ onSelectUser, selectedUser }: UsersListProps) => {
           <div style={{ position: "relative", flexShrink: 0 }}>
             <div
               className="chat-user-avatar"
-              style={{ background: selectedUser?.id === user.id ? "#3B82F6" : (user.avatarColor || "var(--border-strong)"), color: "var(--text-primary)" }}
+              style={{ background: selectedUser?.id === user.id ? "#818CF8" : (user.avatarColor || "var(--border-strong)"), color: "var(--text-primary)" }}
             >
               {user.displayName?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
             </div>
-            {isOnline(user) && (
-              <span style={{ position: "absolute", bottom: 0, right: 0, width: "10px", height: "10px", borderRadius: "50%", background: "#22C55E", border: "2px solid var(--surface)" }} />
-            )}
+            {isOnline(user) && <span className="presence-dot" />}
           </div>
           <div className="chat-user-meta" style={{ overflow: "hidden" }}>
             <p style={{ color: selectedUser?.id === user.id ? "white" : "var(--text-primary)", fontSize: "14px", fontWeight: "600", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>

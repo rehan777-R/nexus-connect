@@ -8,10 +8,10 @@ import { useToast } from '../Toast';
 import { PRIORITY_COLORS, Badge, dueDateInfo } from './taskBadges';
 import type { Task, TaskStatus } from '../types';
 
-const COLUMNS: { status: TaskStatus; accent: string }[] = [
-  { status: 'To Do', accent: 'var(--text-secondary)' },
-  { status: 'In Progress', accent: '#3B82F6' },
-  { status: 'Done', accent: '#22C55E' },
+const COLUMNS: { status: TaskStatus; accent: string; tint: string }[] = [
+  { status: 'To Do', accent: 'var(--text-secondary)', tint: 'rgba(255,255,255,0.025)' },
+  { status: 'In Progress', accent: '#818CF8', tint: 'rgba(99,102,241,0.06)' },
+  { status: 'Done', accent: '#34D399', tint: 'rgba(52,211,153,0.05)' },
 ];
 
 function Board() {
@@ -65,7 +65,7 @@ function Board() {
               </button>
             </Link>
             <Link to="/create">
-              <button style={{ padding: '10px 18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+              <button style={{ padding: '10px 18px', background: 'var(--accent-grad)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
                 Create New
               </button>
             </Link>
@@ -83,12 +83,13 @@ function Board() {
                 onDragLeave={() => setDragOverCol(null)}
                 onDrop={(e) => handleDrop(e, col.status)}
                 style={{
-                  background: isOver ? 'var(--accent-soft)' : 'var(--surface)',
+                  background: isOver ? 'var(--accent-soft)' : col.tint,
                   border: `1px solid ${isOver ? col.accent : 'var(--border)'}`,
-                  borderRadius: '12px',
+                  borderRadius: '14px',
                   padding: '16px',
                   minHeight: '300px',
-                  transition: 'border-color 0.15s, background 0.15s',
+                  transition: 'border-color 0.15s, background 0.15s, box-shadow 0.15s',
+                  boxShadow: isOver ? 'var(--glow)' : 'none',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
@@ -108,7 +109,7 @@ function Board() {
                   return (
                     <div
                       key={task.id}
-                      className="board-card"
+                      className={`board-card${draggingId === task.id ? ' dragging' : ''}`}
                       draggable
                       onDragStart={(e) => {
                         e.dataTransfer.setData('taskId', task.id);
@@ -118,16 +119,15 @@ function Board() {
                       style={{
                         background: 'var(--surface-2)',
                         border: '1px solid var(--border-strong)',
+                        borderLeft: `3px solid ${PRIORITY_COLORS[task.priority]?.text || 'var(--border-strong)'}`,
                         borderRadius: '10px',
                         padding: '14px',
                         marginBottom: '10px',
-                        opacity: draggingId === task.id ? 0.4 : 1,
-                        transform: draggingId === task.id ? 'rotate(1.5deg) scale(0.98)' : 'none',
                       }}
                     >
                       <div style={{ marginBottom: '8px' }}>
                         <Badge label={task.priority} colors={PRIORITY_COLORS[task.priority]} />
-                        {due && <Badge label={due.label} colors={due.colors} />}
+                        {due && <Badge label={`📅 ${due.label}`} colors={due.colors} />}
                       </div>
                       <Link to={`/items/${task.id}`} style={{ textDecoration: 'none' }}>
                         <h4 style={{ margin: '0 0 4px', color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>{task.title}</h4>

@@ -136,18 +136,16 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
       {/* Header */}
       <div className="chat-header">
         <div style={{ position: "relative" }}>
-          <div className="chat-user-avatar" style={{ background: selectedUser.avatarColor || "var(--accent)", color: "#fff" }}>
+          <div className="chat-user-avatar" style={{ background: selectedUser.avatarColor || "var(--accent-grad)", color: "#fff" }}>
             {selectedUser.displayName?.[0]?.toUpperCase() || selectedUser.email?.[0]?.toUpperCase()}
           </div>
-          {online && (
-            <span style={{ position: "absolute", bottom: 0, right: 0, width: "10px", height: "10px", borderRadius: "50%", background: "#22C55E", border: "2px solid var(--surface)" }} />
-          )}
+          {online && <span className="presence-dot" />}
         </div>
         <div>
           <p style={{ color: "var(--text-primary)", fontWeight: "600", margin: 0 }}>
             {selectedUser.displayName || "User"}
           </p>
-          <p style={{ color: online ? "#22C55E" : "var(--text-secondary)", fontSize: "12px", margin: 0 }}>
+          <p style={{ color: online ? "#34D399" : "var(--text-secondary)", fontSize: "12px", margin: 0 }}>
             {otherTyping ? "typing…" : online ? "Online" : selectedUser.email}
           </p>
         </div>
@@ -166,6 +164,7 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
           return (
             <div
               key={msg.id}
+              className="chat-msg"
               onMouseEnter={() => setHovered(msg.id)}
               onMouseLeave={() => setHovered(null)}
               style={{ display: "flex", flexDirection: "column", alignItems: isMine ? "flex-end" : "flex-start" }}
@@ -197,11 +196,12 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
                 <div style={{
                   maxWidth: "65%",
                   padding: "10px 16px",
-                  borderRadius: isMine ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
-                  background: isMine ? "var(--accent)" : "var(--border)",
+                  borderRadius: isMine ? "18px 18px 6px 18px" : "18px 18px 18px 6px",
+                  background: isMine ? "var(--accent-grad)" : "var(--surface-2)",
                   color: isMine ? "#fff" : "var(--text-primary)",
                   fontSize: "14px",
-                  border: msg.flagged ? "1px solid #EAB308" : (isMine ? "none" : "1px solid var(--border-strong)"),
+                  border: msg.flagged ? "1px solid #FBBF24" : (isMine ? "none" : "1px solid var(--border)"),
+                  boxShadow: isMine ? "0 2px 12px rgba(99,102,241,0.25)" : "none",
                 }}>
                   {isEditing ? (
                     <div>
@@ -223,7 +223,7 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
                   ) : (
                     <>
                       <p style={{ margin: 0 }}>{msg.text}</p>
-                      <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "rgba(255,255,255,0.7)" : "var(--text-muted)", textAlign: "right" }}>
+                      <p className="msg-time" style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "rgba(255,255,255,0.7)" : "var(--text-muted)", textAlign: "right" }}>
                         {msg.edited && <span style={{ marginRight: "6px" }}>(edited)</span>}
                         {msg.timestamp?.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </p>
@@ -242,8 +242,8 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
                         onClick={() => toggleReaction(msg, emoji)}
                         style={{
                           display: "flex", alignItems: "center", gap: "4px",
-                          background: mine ? "rgba(37,99,235,0.2)" : "var(--surface-2)",
-                          border: `1px solid ${mine ? "rgba(37,99,235,0.5)" : "var(--border-strong)"}`,
+                          background: mine ? "rgba(99,102,241,0.22)" : "var(--surface-2)",
+                          border: `1px solid ${mine ? "rgba(99,102,241,0.55)" : "var(--border-strong)"}`,
                           borderRadius: "12px", padding: "2px 8px", cursor: "pointer",
                           fontSize: "12px", color: "var(--text-primary)",
                         }}
@@ -255,7 +255,7 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
                 </div>
               )}
               {msg.flagged && isMine && (
-                <p style={{ margin: "4px 4px 0 0", fontSize: "11px", color: "#EAB308" }}>
+                <p style={{ margin: "4px 4px 0 0", fontSize: "11px", color: "#FBBF24" }}>
                   Flagged for review by AI moderation
                 </p>
               )}

@@ -166,7 +166,7 @@ function Assistant() {
         </div>
 
         {error && (
-          <p style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--danger)', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', border: '1px solid rgba(239,68,68,0.3)', marginBottom: '18px' }}>
+          <p style={{ background: 'rgba(248,113,113,0.1)', color: 'var(--danger)', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', border: '1px solid rgba(248,113,113,0.3)', marginBottom: '18px' }}>
             {error}
           </p>
         )}
@@ -199,7 +199,7 @@ function Assistant() {
           {suggestions.length > 0 && (
             <div style={{ marginTop: '20px' }}>
               {suggestions.map((t, i) => (
-                <div key={i} className="ai-card" style={{ padding: '14px 16px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
+                <div key={i} className="ai-card stagger-in" style={{ padding: '14px 16px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px', animationDelay: `${i * 70}ms` }}>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ marginBottom: '6px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                       <AiBadge>AI-generated</AiBadge>
@@ -211,7 +211,7 @@ function Assistant() {
                   <button
                     onClick={() => addTask(i)}
                     disabled={t.added}
-                    style={{ padding: '8px 14px', background: t.added ? 'transparent' : 'var(--border)', color: t.added ? 'var(--success)' : 'var(--text-primary)', border: `1px solid ${t.added ? 'rgba(34,197,94,0.3)' : 'var(--border-strong)'}`, borderRadius: '8px', cursor: t.added ? 'default' : 'pointer', fontWeight: 500, fontSize: '13px', flexShrink: 0 }}
+                    style={{ padding: '8px 14px', background: t.added ? 'transparent' : 'var(--border)', color: t.added ? 'var(--success)' : 'var(--text-primary)', border: `1px solid ${t.added ? 'rgba(52,211,153,0.3)' : 'var(--border-strong)'}`, borderRadius: '8px', cursor: t.added ? 'default' : 'pointer', fontWeight: 500, fontSize: '13px', flexShrink: 0 }}
                   >
                     {t.added ? '✓ Added' : 'Add task'}
                   </button>

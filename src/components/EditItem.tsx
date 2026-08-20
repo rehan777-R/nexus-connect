@@ -68,7 +68,7 @@ function EditItem() {
       <div style={{ background: 'var(--surface)', padding: '40px', borderRadius: '12px', border: '1px solid var(--border)', width: '100%', maxWidth: '500px' }}>
         <h2 style={{ color: 'var(--text-primary)', marginBottom: '4px', fontSize: '22px', fontWeight: 600 }}>Edit Task</h2>
         <p style={{ color: 'var(--text-muted)', marginTop: 0, marginBottom: '28px', fontSize: '14px' }}>Update task details.</p>
-        {error && <p style={{ background: 'rgba(239,68,68,0.1)', color: '#EF4444', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', border: '1px solid rgba(239,68,68,0.3)' }}>{error}</p>}
+        {error && <p style={{ background: 'rgba(248,113,113,0.1)', color: '#F87171', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', border: '1px solid rgba(248,113,113,0.3)' }}>{error}</p>}
         <form onSubmit={handleUpdate}>
           <div style={{ marginBottom: '20px' }}>
             <label style={labelStyle}>Title</label>
@@ -120,7 +120,7 @@ function EditItem() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: '12px' }}>
-            <button type="submit" disabled={loading} style={{ flex: 1, padding: '12px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: loading ? 'default' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+            <button type="submit" disabled={loading} style={{ flex: 1, padding: '12px', background: 'var(--accent-grad)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: loading ? 'default' : 'pointer', opacity: loading ? 0.7 : 1 }}>
               {loading ? 'Updating...' : 'Update Task'}
             </button>
             <button type="button" onClick={() => navigate('/items')} style={{ flex: 1, padding: '12px', background: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-strong)', borderRadius: '8px', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}>

@@ -16,14 +16,19 @@ function Home() {
   return (
     <div className="page" style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       {/* Hero Section */}
-      <div style={{ padding: '90px 30px 70px', textAlign: 'center', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-          <span style={{ color: 'white', fontSize: '24px', fontWeight: '700' }}>N</span>
-        </div>
-        <h1 style={{ fontSize: '38px', margin: '0 0 14px', color: 'var(--text-primary)', fontWeight: '700' }}>Where your team gets things done</h1>
-        <p style={{ fontSize: '16px', color: 'var(--text-secondary)', marginBottom: '18px', maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
-          Tasks, ownership, and real-time chat, all in one connected workspace.
-        </p>
+      <div style={{ padding: '110px 30px 90px', textAlign: 'center', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+        <div className="blob blob-1" />
+        <div className="blob blob-2" />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'var(--accent-grad)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 28px', boxShadow: 'var(--glow)' }}>
+            <span style={{ color: 'white', fontSize: '26px', fontWeight: '700' }}>N</span>
+          </div>
+          <h1 className="gradient-text" style={{ fontSize: 'clamp(38px, 6vw, 56px)', margin: '0 auto 16px', fontWeight: '700', maxWidth: '700px', lineHeight: 1.1 }}>
+            Where your team gets things done
+          </h1>
+          <p style={{ fontSize: '17px', color: 'var(--text-secondary)', marginBottom: '20px', maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
+            Tasks, ownership, and real-time chat, all in one connected workspace.
+          </p>
         <div style={{ marginBottom: '32px' }}>
           <span className="ai-badge">✨ Powered by an LLM planning agent &amp; AI moderation — Llama 3.3 70B via Groq</span>
         </div>
@@ -41,7 +46,7 @@ function Home() {
             </Link>
             {userRole === 'admin' && (
               <Link to="/admin">
-                <button className="btn-secondary" style={{ padding: '11px 24px', fontSize: '14px', color: '#EAB308', borderColor: 'rgba(234,179,8,0.3)' }}>
+                <button className="btn-secondary" style={{ padding: '11px 24px', fontSize: '14px', color: '#FBBF24', borderColor: 'rgba(251,191,36,0.3)' }}>
                   Admin panel
                 </button>
               </Link>
@@ -61,6 +66,7 @@ function Home() {
             </Link>
           </div>
         )}
+        </div>
       </div>
       {/* Features Section */}
       <div style={{ padding: '60px 30px 30px', maxWidth: '900px', margin: '0 auto' }}>

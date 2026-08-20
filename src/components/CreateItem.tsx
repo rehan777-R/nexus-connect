@@ -102,7 +102,7 @@ function CreateItem() {
               </select>
             </div>
           </div>
-          <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: loading ? 'default' : 'pointer', opacity: loading ? 0.7 : 1 }}>
+          <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px', background: 'var(--accent-grad)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: loading ? 'default' : 'pointer', opacity: loading ? 0.7 : 1 }}>
             {loading ? 'Creating...' : 'Create Task'}
           </button>
         </form>

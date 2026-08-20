@@ -123,7 +123,7 @@ function AllItems() {
               </button>
             </Link>
             <Link to="/create">
-              <button style={{ padding: '10px 18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+              <button style={{ padding: '10px 18px', background: 'var(--accent-grad)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
                 Create New
               </button>
             </Link>
@@ -172,7 +172,7 @@ function AllItems() {
             <p style={{ color: 'var(--text-muted)', fontSize: '15px', marginBottom: '20px' }}>No tasks found.</p>
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
               <Link to="/create">
-                <button style={{ padding: '10px 18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer'}}>
+                <button style={{ padding: '10px 18px', background: 'var(--accent-grad)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer'}}>
                   Create First Task
                 </button>
               </Link>
@@ -211,7 +211,7 @@ function AllItems() {
                       <Link to={`/edit/${item.id}`}>
                         <button style={{ padding: '8px 14px', background: 'var(--border)', color: 'var(--text-primary)', border: '1px solid var(--border-strong)', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>Edit</button>
                       </Link>
-                      <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 14px', background: 'transparent', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>Delete</button>
+                      <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 14px', background: 'transparent', color: '#F87171', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>Delete</button>
                     </>
                   )}
                 </div>

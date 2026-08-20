@@ -9,11 +9,12 @@ import type { Task } from "../types";
 
 const card: React.CSSProperties = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "24px" };
 
-function StatTile({ value, label, color }: { value: number | string; label: string; color: string }) {
+function StatTile({ value, label, color, icon }: { value: number | string; label: string; color: string; icon: string }) {
   return (
-    <div style={{ ...card, padding: "20px", textAlign: "center" }}>
-      <h2 style={{ color: color, margin: "0 0 4px", fontSize: "26px", fontWeight: 700 }}>{value}</h2>
-      <p style={{ color: "var(--text-muted)", margin: 0, fontSize: "12.5px" }}>{label}</p>
+    <div className="stat-tile" style={{ ...card, padding: "20px", textAlign: "center" }}>
+      <div style={{ fontSize: "18px", marginBottom: "6px" }} aria-hidden="true">{icon}</div>
+      <h2 style={{ color: color, margin: "0 0 4px", fontSize: "32px", fontWeight: 700 }}>{value}</h2>
+      <p style={{ color: "var(--text-muted)", margin: 0, fontSize: "12.5px", letterSpacing: "0.04em", textTransform: "uppercase", fontWeight: 500 }}>{label}</p>
     </div>
   );
 }
@@ -29,7 +30,7 @@ function HBarChart({ title, rows }: { title: string; rows: { label: string; valu
         <div key={row.label} style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
           <span style={{ width: "90px", flexShrink: 0, color: "var(--text-secondary)", fontSize: "12.5px", textAlign: "right" }}>{row.label}</span>
           <div style={{ flex: 1, height: "14px", background: "var(--border)", borderRadius: "4px", overflow: "hidden" }}>
-            <div style={{ width: `${(row.value / max) * 100}%`, height: "100%", background: row.color, borderRadius: "0 4px 4px 0", transition: "width 0.4s ease" }} />
+            <div className="bar-fill" style={{ width: `${(row.value / max) * 100}%`, height: "100%", background: `linear-gradient(90deg, ${row.color}99, ${row.color})`, borderRadius: "0 4px 4px 0", transition: "width 0.4s ease" }} />
           </div>
           <span style={{ width: "24px", flexShrink: 0, color: "var(--text-primary)", fontSize: "12.5px", fontWeight: 600 }}>{row.value}</span>
         </div>
@@ -63,17 +64,27 @@ function TrendChart({ title, points }: { title: string; points: TrendPoint[] }) 
           : "Hover a point for details"}
       </p>
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }} onMouseLeave={() => setHover(null)}>
+        <defs>
+          <linearGradient id="trendStroke" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#6366F1" />
+            <stop offset="100%" stopColor="#8B5CF6" />
+          </linearGradient>
+          <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(99,102,241,0.35)" />
+            <stop offset="100%" stopColor="rgba(139,92,246,0)" />
+          </linearGradient>
+        </defs>
         {[0.5, 1].map((f) => (
           <line key={f} x1={PAD_X} x2={W - PAD_X} y1={y(max * f)} y2={y(max * f)} style={{ stroke: 'var(--border)' }} strokeWidth="1" />
         ))}
         <text x={PAD_X - 6} y={y(max) + 4} style={{ fill: 'var(--text-muted)' }} fontSize="10" textAnchor="end">{max}</text>
         <text x={PAD_X - 6} y={H - PAD_BOTTOM + 4} style={{ fill: 'var(--text-muted)' }} fontSize="10" textAnchor="end">0</text>
         <line x1={PAD_X} x2={W - PAD_X} y1={H - PAD_BOTTOM} y2={H - PAD_BOTTOM} style={{ stroke: 'var(--border-strong)' }} strokeWidth="1" />
-        <path d={areaPath} fill="rgba(59,130,246,0.12)" />
-        <path d={linePath} fill="none" stroke="#3B82F6" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+        <path className="chart-area" d={areaPath} fill="url(#trendFill)" />
+        <path className="chart-line" d={linePath} pathLength={1} fill="none" stroke="url(#trendStroke)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
         {points.map((p, i) => (
           <g key={p.fullLabel}>
-            <circle cx={x(i)} cy={y(p.count)} r={hover === i ? 5 : 3.5} fill="#3B82F6" style={{ stroke: 'var(--surface)' }} strokeWidth="2" />
+            <circle cx={x(i)} cy={y(p.count)} r={hover === i ? 5 : 3.5} fill="#818CF8" style={{ stroke: 'var(--surface-solid)' }} strokeWidth="2" />
             {/* larger invisible hit target */}
             <circle cx={x(i)} cy={y(p.count)} r="14" fill="transparent" onMouseEnter={() => setHover(i)} style={{ cursor: "pointer" }} />
             <text x={x(i)} y={H - 8} style={{ fill: hover === i ? 'var(--text-primary)' : 'var(--text-muted)' }} fontSize="10" textAnchor="middle">{p.label}</text>
@@ -163,10 +174,10 @@ export default function UserDashboard() {
         <>
         {/* Stat tiles */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "14px", marginBottom: "18px" }}>
-          <StatTile value={tasks.length} label="Total tasks" color="#3B82F6" />
-          <StatTile value={stats.byStatus["In Progress"]} label="In progress" color="#EAB308" />
-          <StatTile value={`${stats.completion}%`} label="Completed" color="#22C55E" />
-          <StatTile value={stats.overdue} label="Overdue" color={stats.overdue > 0 ? "#EF4444" : "var(--text-muted)"} />
+          <StatTile icon="📋" value={tasks.length} label="Total tasks" color="#818CF8" />
+          <StatTile icon="⚡" value={stats.byStatus["In Progress"]} label="In progress" color="#FBBF24" />
+          <StatTile icon="✅" value={`${stats.completion}%`} label="Completed" color="#34D399" />
+          <StatTile icon="⏰" value={stats.overdue} label="Overdue" color={stats.overdue > 0 ? "#F87171" : "var(--text-muted)"} />
         </div>
 
         {tasks.length === 0 ? (
@@ -184,16 +195,16 @@ export default function UserDashboard() {
                 title="Tasks by status"
                 rows={[
                   { label: "To Do", value: stats.byStatus["To Do"], color: "var(--text-secondary)" },
-                  { label: "In Progress", value: stats.byStatus["In Progress"], color: "#3B82F6" },
-                  { label: "Done", value: stats.byStatus.Done, color: "#22C55E" },
+                  { label: "In Progress", value: stats.byStatus["In Progress"], color: "#818CF8" },
+                  { label: "Done", value: stats.byStatus.Done, color: "#34D399" },
                 ]}
               />
               <HBarChart
                 title="Tasks by priority"
                 rows={[
-                  { label: "High", value: stats.byPriority.High, color: "#EF4444" },
-                  { label: "Medium", value: stats.byPriority.Medium, color: "#EAB308" },
-                  { label: "Low", value: stats.byPriority.Low, color: "#22C55E" },
+                  { label: "High", value: stats.byPriority.High, color: "#F87171" },
+                  { label: "Medium", value: stats.byPriority.Medium, color: "#FBBF24" },
+                  { label: "Low", value: stats.byPriority.Low, color: "#34D399" },
                 ]}
               />
             </div>

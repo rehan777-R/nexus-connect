@@ -40,9 +40,9 @@ export default function AdminDashboard() {
   users.forEach(u => { emailByUid[u.uid] = u.email; });
 
   const statCard = (value: number, label: string, color: string) => (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "20px", textAlign: "center" }}>
-      <h2 style={{ color: color, margin: "0 0 4px", fontSize: "24px", fontWeight: "700" }}>{value}</h2>
-      <p style={{ color: "var(--text-muted)", margin: 0, fontSize: "12.5px" }}>{label}</p>
+    <div className="stat-tile" style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "10px", padding: "20px", textAlign: "center" }}>
+      <h2 style={{ color: color, margin: "0 0 4px", fontSize: "28px", fontWeight: "700" }}>{value}</h2>
+      <p style={{ color: "var(--text-muted)", margin: 0, fontSize: "12.5px", letterSpacing: "0.04em", textTransform: "uppercase", fontWeight: 500 }}>{label}</p>
     </div>
   );
 
@@ -64,10 +64,10 @@ export default function AdminDashboard() {
         {/* Stats Cards */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "14px", marginBottom: "24px" }}>
           {statCard(users.length, "Total users", "var(--accent)")}
-          {statCard(adminCount, "Admins", "#EAB308")}
-          {statCard(userCount, "Normal users", "#22C55E")}
+          {statCard(adminCount, "Admins", "#FBBF24")}
+          {statCard(userCount, "Normal users", "#34D399")}
           {statCard(items.length, "Total tasks", "var(--text-muted)")}
-          {statCard(flaggedMessages.length, "Flagged messages", "#EF4444")}
+          {statCard(flaggedMessages.length, "Flagged messages", "#F87171")}
         </div>
 
         {/* Flagged Messages */}
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
                     <td style={{ padding: "10px 0", color: "var(--text-primary)", fontSize: "13px", borderBottom: "1px solid var(--border)" }}>{emailByUid[msg.senderId] || "Unknown"}</td>
                     <td style={{ padding: "10px 0", color: "var(--text-primary)", fontSize: "13px", borderBottom: "1px solid var(--border)" }}>{msg.text}</td>
                     <td style={{ padding: "10px 6px 10px 0", borderBottom: "1px solid var(--border)" }}>
-                      <span style={{ display: "inline-block", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "var(--danger)", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: 500 }}>
+                      <span style={{ display: "inline-block", background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.3)", color: "var(--danger)", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: 500 }}>
                         🛡 {msg.flagReason || "Flagged by AI"}
                       </span>
                     </td>
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
                 <tr key={i}>
                   <td style={{ padding: "10px 0", color: "var(--text-primary)", fontSize: "13px", borderBottom: "1px solid var(--border)" }}>{user.email}</td>
                   <td style={{ padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
-                    <span style={{ background: user.role === "admin" ? "rgba(234,179,8,0.12)" : "rgba(37,99,235,0.12)", color: user.role === "admin" ? "#EAB308" : "var(--accent)", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: "500" }}>
+                    <span style={{ background: user.role === "admin" ? "rgba(251,191,36,0.12)" : "rgba(99,102,241,0.14)", color: user.role === "admin" ? "#FBBF24" : "var(--accent)", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: "500" }}>
                       {user.role}
                     </span>
                   </td>

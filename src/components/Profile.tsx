@@ -6,7 +6,7 @@ import { db, auth } from '../firebase';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../Toast';
 
-const AVATAR_COLORS = ['#2563EB', '#7C3AED', '#DB2777', '#EF4444', '#EA580C', '#EAB308', '#22C55E', '#0D9488'];
+const AVATAR_COLORS = ['#6366F1', '#7C3AED', '#DB2777', '#F87171', '#EA580C', '#FBBF24', '#34D399', '#0D9488'];
 
 const card: React.CSSProperties = { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '28px' };
 const labelStyle: React.CSSProperties = { display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontWeight: 500, fontSize: '13px' };
@@ -72,7 +72,7 @@ function Profile() {
             </h2>
             <p style={{ color: 'var(--text-muted)', margin: '4px 0 0', fontSize: '13.5px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser?.email}</p>
             <div style={{ marginTop: '8px', display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <span style={{ background: userRole === 'admin' ? 'rgba(234,179,8,0.12)' : 'rgba(37,99,235,0.12)', color: userRole === 'admin' ? '#EAB308' : '#3B82F6', padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 500 }}>
+              <span style={{ background: userRole === 'admin' ? 'rgba(251,191,36,0.12)' : 'rgba(99,102,241,0.14)', color: userRole === 'admin' ? '#FBBF24' : '#818CF8', padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 500 }}>
                 {userRole || 'user'}
               </span>
               {joined && <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>Joined {joined}</span>}

@@ -12,9 +12,9 @@ interface ToastItem {
 const ToastContext = createContext<ShowToast | null>(null);
 
 const TOAST_COLORS: Record<ToastType, { border: string; icon: string; symbol: string }> = {
-  success: { border: "rgba(34,197,94,0.4)", icon: "#22C55E", symbol: "✓" },
-  error: { border: "rgba(239,68,68,0.4)", icon: "#EF4444", symbol: "✕" },
-  info: { border: "rgba(37,99,235,0.4)", icon: "#3B82F6", symbol: "i" },
+  success: { border: "rgba(52,211,153,0.4)", icon: "#34D399", symbol: "✓" },
+  error: { border: "rgba(248,113,113,0.4)", icon: "#F87171", symbol: "✕" },
+  info: { border: "rgba(99,102,241,0.45)", icon: "#818CF8", symbol: "i" },
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -39,7 +39,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               key={toast.id}
               style={{
                 display: "flex", alignItems: "center", gap: "10px",
-                background: "var(--surface-2)", border: `1px solid ${colors.border}`,
+                background: "var(--surface-solid)", border: `1px solid ${colors.border}`,
                 borderRadius: "10px", padding: "12px 18px", minWidth: "240px", maxWidth: "360px",
                 boxShadow: "0 8px 24px rgba(0,0,0,0.5)", animation: "toast-in 0.25s ease",
               }}

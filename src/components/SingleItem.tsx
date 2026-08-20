@@ -59,7 +59,7 @@ function SingleItem() {
             </Link>
           )}
           <Link to="/items">
-            <button style={{ padding: '10px 18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+            <button style={{ padding: '10px 18px', background: 'var(--accent-grad)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
               Back to Tasks
             </button>
           </Link>

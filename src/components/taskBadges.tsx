@@ -6,15 +6,15 @@ export interface BadgeColors {
 }
 
 export const PRIORITY_COLORS: Record<TaskPriority, BadgeColors> = {
-  Low: { bg: 'rgba(34,197,94,0.12)', text: '#22C55E' },
-  Medium: { bg: 'rgba(234,179,8,0.12)', text: '#EAB308' },
-  High: { bg: 'rgba(239,68,68,0.12)', text: '#EF4444' },
+  Low: { bg: 'rgba(52,211,153,0.12)', text: '#34D399' },
+  Medium: { bg: 'rgba(251,191,36,0.12)', text: '#FBBF24' },
+  High: { bg: 'rgba(248,113,113,0.12)', text: '#F87171' },
 };
 
 export const STATUS_COLORS: Record<TaskStatus, BadgeColors> = {
   'To Do': { bg: 'rgba(113,113,122,0.15)', text: 'var(--text-secondary)' },
-  'In Progress': { bg: 'rgba(37,99,235,0.12)', text: '#3B82F6' },
-  'Done': { bg: 'rgba(34,197,94,0.12)', text: '#22C55E' },
+  'In Progress': { bg: 'rgba(99,102,241,0.14)', text: '#818CF8' },
+  'Done': { bg: 'rgba(52,211,153,0.12)', text: '#34D399' },
 };
 
 export function Badge({ label, colors }: { label?: string; colors?: BadgeColors }) {
@@ -40,7 +40,7 @@ export function dueDateInfo(task: { dueDate?: string | null; status?: TaskStatus
   return {
     label: overdue ? `Overdue · ${label}` : `Due ${label}`,
     colors: overdue
-      ? { bg: 'rgba(239,68,68,0.12)', text: '#EF4444' }
+      ? { bg: 'rgba(248,113,113,0.12)', text: '#F87171' }
       : { bg: 'rgba(113,113,122,0.15)', text: 'var(--text-secondary)' },
   };
 }
