@@ -17,6 +17,40 @@ interface Suggestion {
 const card: React.CSSProperties = { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '28px' };
 const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-strong)', background: 'var(--bg)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', margin: 0 };
 
+function AiBadge({ children }: { children: React.ReactNode }) {
+  return <span className="ai-badge">✨ {children}</span>;
+}
+
+function Thinking({ label }: { label: string }) {
+  return (
+    <div className="ai-thinking" style={{ marginTop: '16px' }}>
+      <span className="typing-dots"><span>•</span><span>•</span><span>•</span></span>
+      <span>{label}</span>
+    </div>
+  );
+}
+
+// The visible agent pipeline: goal in → LLM reasoning → structured tasks → board.
+function Stepper({ step }: { step: number }) {
+  const STEPS = ['Describe goal', 'LLM plans tasks', 'Review output', 'Added to board'];
+  return (
+    <div className="stepper" aria-label="Agent workflow progress">
+      {STEPS.map((label, i) => {
+        const state = i < step ? 'done' : i === step ? 'active' : '';
+        return (
+          <React.Fragment key={label}>
+            {i > 0 && <span className="stepper-arrow">→</span>}
+            <span className={`stepper-step ${state}`}>
+              <span className="dot">{i < step ? '✓' : i + 1}</span>
+              {label}
+            </span>
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
 function Assistant() {
   const [goal, setGoal] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -28,6 +62,10 @@ function Assistant() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const showToast = useToast();
+
+  const allAdded = suggestions.length > 0 && suggestions.every((s) => s.added);
+  // Which stage of the agent pipeline we're at (drives the stepper).
+  const step = allAdded ? 4 : suggestions.length > 0 ? 2 : breakdownLoading ? 1 : 0;
 
   const generateBreakdown = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -113,46 +151,56 @@ function Assistant() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
+    <div className="page" style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
       <div style={{ maxWidth: '700px', margin: '0 auto' }}>
         <div style={{ marginBottom: '24px' }}>
-          <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '22px', fontWeight: 600 }}>✨ AI Assistant</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+            <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '22px', fontWeight: 600 }}>AI Assistant</h2>
+            <AiBadge>Llama 3.3 70B · Groq · serverless</AiBadge>
+          </div>
           <p style={{ color: 'var(--text-muted)', margin: '6px 0 0', fontSize: '13.5px' }}>
-            Powered by Llama 3.3 70B — break down goals into tasks, or get a summary of your workload.
+            An LLM planning agent: it turns your goal into structured, prioritized tasks and files them onto your board.
           </p>
         </div>
 
         {error && (
-          <p style={{ background: 'rgba(239,68,68,0.1)', color: '#EF4444', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', border: '1px solid rgba(239,68,68,0.3)', marginBottom: '18px' }}>
+          <p style={{ background: 'rgba(239,68,68,0.1)', color: 'var(--danger)', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', border: '1px solid rgba(239,68,68,0.3)', marginBottom: '18px' }}>
             {error}
           </p>
         )}
 
-        {/* Goal breakdown */}
+        {/* Goal breakdown — the agent pipeline */}
         <div style={{ ...card, marginBottom: '18px' }}>
           <h3 style={{ color: 'var(--text-primary)', margin: '0 0 6px', fontSize: '15px', fontWeight: 600 }}>Break a goal into tasks</h3>
           <p style={{ color: 'var(--text-muted)', margin: '0 0 16px', fontSize: '13px' }}>
-            Describe what you want to achieve and the AI will plan the tasks for you.
+            Describe what you want to achieve and the model plans the tasks for you.
           </p>
+
+          <Stepper step={step} />
+
           <form onSubmit={generateBreakdown} style={{ display: 'flex', gap: '10px' }}>
             <input
               type="text"
               placeholder='e.g. "Launch a portfolio website by next month"'
               value={goal}
               onChange={(e) => setGoal(e.target.value)}
+              aria-label="Goal for the AI to break down"
               style={{ ...inputStyle, flex: 1 }}
             />
             <button type="submit" disabled={breakdownLoading || !goal.trim()} className="btn-primary" style={{ opacity: breakdownLoading ? 0.7 : 1, whiteSpace: 'nowrap' }}>
-              {breakdownLoading ? 'Thinking…' : 'Generate'}
+              {breakdownLoading ? 'Planning…' : 'Generate'}
             </button>
           </form>
+
+          {breakdownLoading && <Thinking label="Llama 3.3 70B is planning your tasks…" />}
 
           {suggestions.length > 0 && (
             <div style={{ marginTop: '20px' }}>
               {suggestions.map((t, i) => (
-                <div key={i} style={{ background: 'var(--surface-2)', border: '1px solid var(--border-strong)', borderRadius: '10px', padding: '14px 16px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
+                <div key={i} className="ai-card" style={{ padding: '14px 16px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ marginBottom: '6px' }}>
+                    <div style={{ marginBottom: '6px', display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <AiBadge>AI-generated</AiBadge>
                       <Badge label={t.priority} colors={PRIORITY_COLORS[t.priority]} />
                     </div>
                     <h4 style={{ margin: '0 0 4px', color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>{t.title}</h4>
@@ -161,14 +209,14 @@ function Assistant() {
                   <button
                     onClick={() => addTask(i)}
                     disabled={t.added}
-                    style={{ padding: '8px 14px', background: t.added ? 'transparent' : 'var(--border)', color: t.added ? '#22C55E' : 'var(--text-primary)', border: `1px solid ${t.added ? 'rgba(34,197,94,0.3)' : 'var(--border-strong)'}`, borderRadius: '8px', cursor: t.added ? 'default' : 'pointer', fontWeight: 500, fontSize: '13px', flexShrink: 0 }}
+                    style={{ padding: '8px 14px', background: t.added ? 'transparent' : 'var(--border)', color: t.added ? 'var(--success)' : 'var(--text-primary)', border: `1px solid ${t.added ? 'rgba(34,197,94,0.3)' : 'var(--border-strong)'}`, borderRadius: '8px', cursor: t.added ? 'default' : 'pointer', fontWeight: 500, fontSize: '13px', flexShrink: 0 }}
                   >
                     {t.added ? '✓ Added' : 'Add task'}
                   </button>
                 </div>
               ))}
               <div style={{ display: 'flex', gap: '10px', marginTop: '14px' }}>
-                <button onClick={addAll} disabled={addingAll || suggestions.every((s) => s.added)} className="btn-primary" style={{ opacity: addingAll ? 0.7 : 1 }}>
+                <button onClick={addAll} disabled={addingAll || allAdded} className="btn-primary" style={{ opacity: addingAll ? 0.7 : 1 }}>
                   {addingAll ? 'Adding…' : 'Add all to board'}
                 </button>
                 <button onClick={() => navigate('/board')} className="btn-secondary">
@@ -183,15 +231,21 @@ function Assistant() {
         <div style={card}>
           <h3 style={{ color: 'var(--text-primary)', margin: '0 0 6px', fontSize: '15px', fontWeight: 600 }}>Summarize my workload</h3>
           <p style={{ color: 'var(--text-muted)', margin: '0 0 16px', fontSize: '13px' }}>
-            Get a quick AI overview of your open tasks and what to tackle next.
+            The model reads your open tasks and tells you what to tackle next.
           </p>
           <button onClick={generateSummary} disabled={summaryLoading} className="btn-secondary" style={{ opacity: summaryLoading ? 0.7 : 1 }}>
             {summaryLoading ? 'Analyzing…' : 'Generate summary'}
           </button>
+          {summaryLoading && <Thinking label="Reading your tasks and drafting a summary…" />}
           {summary && (
-            <p style={{ marginTop: '16px', marginBottom: 0, background: 'var(--surface-2)', border: '1px solid var(--border-strong)', borderRadius: '10px', padding: '16px', color: 'var(--text-primary)', fontSize: '13.5px', lineHeight: 1.6 }}>
-              {summary}
-            </p>
+            <div className="ai-card" style={{ marginTop: '16px', padding: '16px' }}>
+              <div style={{ marginBottom: '8px' }}>
+                <AiBadge>AI-generated summary</AiBadge>
+              </div>
+              <p style={{ margin: 0, color: 'var(--text-primary)', fontSize: '13.5px', lineHeight: 1.6 }}>
+                {summary}
+              </p>
+            </div>
           )}
         </div>
       </div>

@@ -70,7 +70,13 @@ export default function AdminDashboard() {
 
         {/* Flagged Messages */}
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "24px", marginBottom: "18px" }}>
-          <h3 style={{ color: "var(--text-primary)", marginTop: 0, fontSize: "15px", fontWeight: "600", marginBottom: "14px" }}>Flagged messages (AI moderation)</h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px", flexWrap: "wrap" }}>
+            <h3 style={{ color: "var(--text-primary)", margin: 0, fontSize: "15px", fontWeight: "600" }}>Moderation review queue</h3>
+            <span className="ai-badge">✨ Screened by Llama 3.3 70B</span>
+          </div>
+          <p style={{ color: "var(--text-muted)", fontSize: "12.5px", margin: "0 0 14px" }}>
+            Every chat message (including edits) is classified by an LLM in the background. Flagged messages land here for human review.
+          </p>
           {flaggedMessages.length === 0 ? (
             <p style={{ color: "var(--text-muted)", fontSize: "13.5px" }}>No flagged messages. Team chat looks clean.</p>
           ) : (
@@ -87,7 +93,11 @@ export default function AdminDashboard() {
                   <tr key={msg.id}>
                     <td style={{ padding: "10px 0", color: "var(--text-primary)", fontSize: "13px", borderBottom: "1px solid var(--border)" }}>{emailByUid[msg.senderId] || "Unknown"}</td>
                     <td style={{ padding: "10px 0", color: "var(--text-primary)", fontSize: "13px", borderBottom: "1px solid var(--border)" }}>{msg.text}</td>
-                    <td style={{ padding: "10px 0", color: "#EF4444", fontSize: "13px", borderBottom: "1px solid var(--border)" }}>{msg.flagReason || "—"}</td>
+                    <td style={{ padding: "10px 6px 10px 0", borderBottom: "1px solid var(--border)" }}>
+                      <span style={{ display: "inline-block", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "var(--danger)", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: 500 }}>
+                        🛡 {msg.flagReason || "Flagged by AI"}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
