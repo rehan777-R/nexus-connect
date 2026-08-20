@@ -122,32 +122,32 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
   if (!selectedUser) {
     return (
       <div className="chat-messages" style={{ alignItems: "center", justifyContent: "center" }}>
-        <p style={{ color: "#71717A", fontSize: "15px" }}>Select a user to start chatting</p>
+        <p style={{ color: "var(--text-muted)", fontSize: "15px" }}>Select a user to start chatting</p>
       </div>
     );
   }
 
   const online = isOnline(selectedUser);
 
-  const iconBtnStyle: React.CSSProperties = { background: "transparent", border: "none", color: "#71717A", cursor: "pointer", fontSize: "14px", lineHeight: 1, padding: "2px 4px" };
+  const iconBtnStyle: React.CSSProperties = { background: "transparent", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "14px", lineHeight: 1, padding: "2px 4px" };
 
   return (
     <>
       {/* Header */}
       <div className="chat-header">
         <div style={{ position: "relative" }}>
-          <div className="chat-user-avatar" style={{ background: selectedUser.avatarColor || "#2563EB", color: "#fff" }}>
+          <div className="chat-user-avatar" style={{ background: selectedUser.avatarColor || "var(--accent)", color: "#fff" }}>
             {selectedUser.displayName?.[0]?.toUpperCase() || selectedUser.email?.[0]?.toUpperCase()}
           </div>
           {online && (
-            <span style={{ position: "absolute", bottom: 0, right: 0, width: "10px", height: "10px", borderRadius: "50%", background: "#22C55E", border: "2px solid #111113" }} />
+            <span style={{ position: "absolute", bottom: 0, right: 0, width: "10px", height: "10px", borderRadius: "50%", background: "#22C55E", border: "2px solid var(--surface)" }} />
           )}
         </div>
         <div>
-          <p style={{ color: "#E5E5E7", fontWeight: "600", margin: 0 }}>
+          <p style={{ color: "var(--text-primary)", fontWeight: "600", margin: 0 }}>
             {selectedUser.displayName || "User"}
           </p>
-          <p style={{ color: online ? "#22C55E" : "#A1A1AA", fontSize: "12px", margin: 0 }}>
+          <p style={{ color: online ? "#22C55E" : "var(--text-secondary)", fontSize: "12px", margin: 0 }}>
             {otherTyping ? "typing…" : online ? "Online" : selectedUser.email}
           </p>
         </div>
@@ -155,7 +155,7 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
       {/* Messages */}
       <div className="chat-messages">
         {messages.length === 0 && (
-          <p style={{ textAlign: "center", color: "#71717A", fontSize: "14px", marginTop: "40px" }}>
+          <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "14px", marginTop: "40px" }}>
             No messages yet. Say hi!
           </p>
         )}
@@ -174,7 +174,7 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
                 {hovered === msg.id && !isEditing && (
                   <div style={{ display: "flex", alignItems: "center", gap: "2px" }}>
                     {/* Reaction picker */}
-                    <div style={{ display: "flex", gap: "2px", background: "#18181B", border: "1px solid #27272A", borderRadius: "14px", padding: "2px 6px" }}>
+                    <div style={{ display: "flex", gap: "2px", background: "var(--surface-2)", border: "1px solid var(--border-strong)", borderRadius: "14px", padding: "2px 6px" }}>
                       {REACTION_EMOJIS.map((emoji) => (
                         <button
                           key={emoji}
@@ -198,10 +198,10 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
                   maxWidth: "65%",
                   padding: "10px 16px",
                   borderRadius: isMine ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
-                  background: isMine ? "#2563EB" : "#1F1F23",
-                  color: isMine ? "#fff" : "#E5E5E7",
+                  background: isMine ? "var(--accent)" : "var(--border)",
+                  color: isMine ? "#fff" : "var(--text-primary)",
                   fontSize: "14px",
-                  border: msg.flagged ? "1px solid #EAB308" : (isMine ? "none" : "1px solid #27272A"),
+                  border: msg.flagged ? "1px solid #EAB308" : (isMine ? "none" : "1px solid var(--border-strong)"),
                 }}>
                   {isEditing ? (
                     <div>
@@ -223,7 +223,7 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
                   ) : (
                     <>
                       <p style={{ margin: 0 }}>{msg.text}</p>
-                      <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "rgba(255,255,255,0.7)" : "#71717A", textAlign: "right" }}>
+                      <p style={{ margin: "4px 0 0 0", fontSize: "11px", color: isMine ? "rgba(255,255,255,0.7)" : "var(--text-muted)", textAlign: "right" }}>
                         {msg.edited && <span style={{ marginRight: "6px" }}>(edited)</span>}
                         {msg.timestamp?.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                       </p>
@@ -242,13 +242,13 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
                         onClick={() => toggleReaction(msg, emoji)}
                         style={{
                           display: "flex", alignItems: "center", gap: "4px",
-                          background: mine ? "rgba(37,99,235,0.2)" : "#18181B",
-                          border: `1px solid ${mine ? "rgba(37,99,235,0.5)" : "#27272A"}`,
+                          background: mine ? "rgba(37,99,235,0.2)" : "var(--surface-2)",
+                          border: `1px solid ${mine ? "rgba(37,99,235,0.5)" : "var(--border-strong)"}`,
                           borderRadius: "12px", padding: "2px 8px", cursor: "pointer",
-                          fontSize: "12px", color: "#E5E5E7",
+                          fontSize: "12px", color: "var(--text-primary)",
                         }}
                       >
-                        {emoji} <span style={{ fontSize: "11px", color: "#A1A1AA" }}>{uids.length}</span>
+                        {emoji} <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>{uids.length}</span>
                       </button>
                     );
                   })}
@@ -264,7 +264,7 @@ const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
         })}
         {otherTyping && (
           <div style={{ display: "flex", alignItems: "flex-start" }}>
-            <div style={{ padding: "10px 16px", borderRadius: "14px 14px 14px 4px", background: "#1F1F23", border: "1px solid #27272A", color: "#A1A1AA", fontSize: "14px" }}>
+            <div style={{ padding: "10px 16px", borderRadius: "14px 14px 14px 4px", background: "var(--border)", border: "1px solid var(--border-strong)", color: "var(--text-secondary)", fontSize: "14px" }}>
               <span className="typing-dots"><span>•</span><span>•</span><span>•</span></span>
             </div>
           </div>

@@ -17,7 +17,7 @@ const SAMPLE_TASKS: Omit<Task, 'id' | 'createdBy' | 'createdByEmail' | 'createdA
 
 const PRIORITY_ORDER: Record<string, number> = { High: 0, Medium: 1, Low: 2 };
 
-const filterSelectStyle: React.CSSProperties = { width: 'auto', padding: '9px 12px', borderRadius: '8px', border: '1px solid #27272A', background: '#111113', color: '#E5E5E7', fontSize: '13px', outline: 'none', margin: 0 };
+const filterSelectStyle: React.CSSProperties = { width: 'auto', padding: '9px 12px', borderRadius: '8px', border: '1px solid var(--border-strong)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', margin: 0 };
 
 function AllItems() {
   const [items, setItems] = useState<Task[]>([]);
@@ -107,18 +107,18 @@ function AllItems() {
   const hasFilters = search.trim() || filterStatus !== 'All' || filterPriority !== 'All';
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0A0B', padding: '30px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-          <h2 style={{ color: '#E5E5E7', margin: 0, fontSize: '22px', fontWeight: 600 }}>{userRole === 'admin' ? 'All Tasks' : 'My Tasks'}</h2>
+          <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '22px', fontWeight: 600 }}>{userRole === 'admin' ? 'All Tasks' : 'My Tasks'}</h2>
           <div style={{ display: 'flex', gap: '10px' }}>
             <Link to="/board">
-              <button style={{ padding: '10px 18px', background: '#1F1F23', color: '#E5E5E7', border: '1px solid #27272A', borderRadius: '8px', fontWeight: 500, fontSize: '14px', cursor: 'pointer' }}>
+              <button style={{ padding: '10px 18px', background: 'var(--border)', color: 'var(--text-primary)', border: '1px solid var(--border-strong)', borderRadius: '8px', fontWeight: 500, fontSize: '14px', cursor: 'pointer' }}>
                 Board view
               </button>
             </Link>
             <Link to="/create">
-              <button style={{ padding: '10px 18px', background: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+              <button style={{ padding: '10px 18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
                 Create New
               </button>
             </Link>
@@ -133,7 +133,7 @@ function AllItems() {
               placeholder="Search tasks..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ flex: 1, minWidth: '180px', padding: '9px 14px', borderRadius: '8px', border: '1px solid #27272A', background: '#111113', color: '#E5E5E7', fontSize: '13px', outline: 'none', margin: 0 }}
+              style={{ flex: 1, minWidth: '180px', padding: '9px 14px', borderRadius: '8px', border: '1px solid var(--border-strong)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', margin: 0 }}
             />
             <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={filterSelectStyle}>
               <option value="All">All statuses</option>
@@ -157,22 +157,22 @@ function AllItems() {
         )}
 
         {items.length === 0 ? (
-          <div style={{ background: '#111113', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid #1F1F23' }}>
-            <p style={{ color: '#71717A', fontSize: '15px', marginBottom: '20px' }}>No tasks found.</p>
+          <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid var(--border)' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '15px', marginBottom: '20px' }}>No tasks found.</p>
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
               <Link to="/create">
-                <button style={{ padding: '10px 18px', background: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer'}}>
+                <button style={{ padding: '10px 18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer'}}>
                   Create First Task
                 </button>
               </Link>
-              <button onClick={loadSampleTasks} disabled={loadingSamples} style={{ padding: '10px 18px', background: 'transparent', color: '#A1A1AA', border: '1px solid #27272A', borderRadius: '8px', fontWeight: 500, fontSize: '14px', cursor: loadingSamples ? 'default' : 'pointer', opacity: loadingSamples ? 0.7 : 1 }}>
+              <button onClick={loadSampleTasks} disabled={loadingSamples} style={{ padding: '10px 18px', background: 'transparent', color: 'var(--text-secondary)', border: '1px solid var(--border-strong)', borderRadius: '8px', fontWeight: 500, fontSize: '14px', cursor: loadingSamples ? 'default' : 'pointer', opacity: loadingSamples ? 0.7 : 1 }}>
                 {loadingSamples ? 'Loading...' : 'Load sample tasks'}
               </button>
             </div>
           </div>
         ) : visibleItems.length === 0 ? (
-          <div style={{ background: '#111113', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid #1F1F23' }}>
-            <p style={{ color: '#71717A', fontSize: '15px', margin: 0 }}>
+          <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid var(--border)' }}>
+            <p style={{ color: 'var(--text-muted)', fontSize: '15px', margin: 0 }}>
               {hasFilters ? 'No tasks match your filters.' : 'No tasks found.'}
             </p>
           </div>
@@ -180,25 +180,25 @@ function AllItems() {
           visibleItems.map((item) => {
             const due = dueDateInfo(item);
             return (
-              <div key={item.id} style={{ background: '#111113', borderRadius: '12px', padding: '20px 24px', marginBottom: '14px', border: '1px solid #1F1F23', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+              <div key={item.id} style={{ background: 'var(--surface)', borderRadius: '12px', padding: '20px 24px', marginBottom: '14px', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ marginBottom: '10px' }}>
                     <Badge label={item.status} colors={STATUS_COLORS[item.status]} />
                     <Badge label={item.priority} colors={PRIORITY_COLORS[item.priority]} />
                     {due && <Badge label={due.label} colors={due.colors} />}
                   </div>
-                  <h3 style={{ margin: '0 0 6px', color: '#E5E5E7', fontSize: '16px', fontWeight: 600 }}>{item.title}</h3>
-                  <p style={{ margin: '0 0 8px', color: '#A1A1AA', fontSize: '14px' }}>{item.description}</p>
-                  <span style={{ fontSize: '12px', color: '#71717A' }}>By: {item.createdByEmail}</span>
+                  <h3 style={{ margin: '0 0 6px', color: 'var(--text-primary)', fontSize: '16px', fontWeight: 600 }}>{item.title}</h3>
+                  <p style={{ margin: '0 0 8px', color: 'var(--text-secondary)', fontSize: '14px' }}>{item.description}</p>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>By: {item.createdByEmail}</span>
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
                   <Link to={`/items/${item.id}`}>
-                    <button style={{ padding: '8px 14px', background: '#1F1F23', color: '#E5E5E7', border: '1px solid #27272A', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>View</button>
+                    <button style={{ padding: '8px 14px', background: 'var(--border)', color: 'var(--text-primary)', border: '1px solid var(--border-strong)', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>View</button>
                   </Link>
                   {(userRole === 'admin' || item.createdBy === currentUser?.uid) && (
                     <>
                       <Link to={`/edit/${item.id}`}>
-                        <button style={{ padding: '8px 14px', background: '#1F1F23', color: '#E5E5E7', border: '1px solid #27272A', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>Edit</button>
+                        <button style={{ padding: '8px 14px', background: 'var(--border)', color: 'var(--text-primary)', border: '1px solid var(--border-strong)', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>Edit</button>
                       </Link>
                       <button onClick={() => handleDelete(item.id)} style={{ padding: '8px 14px', background: 'transparent', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>Delete</button>
                     </>

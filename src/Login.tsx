@@ -53,13 +53,13 @@ export default function Login() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0A0A0B", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ background: "#111113", border: "1px solid #1F1F23", padding: "36px", borderRadius: "12px", width: "100%", maxWidth: "380px" }}>
-        <h2 style={{ textAlign: "center", marginBottom: "26px", color: "white", fontSize: "22px", fontWeight: "600" }}>Welcome back</h2>
+    <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "36px", borderRadius: "12px", width: "100%", maxWidth: "380px" }}>
+        <h2 style={{ textAlign: "center", marginBottom: "26px", color: "var(--text-primary)", fontSize: "22px", fontWeight: "600" }}>Welcome back</h2>
         {error && <p style={{ background: "rgba(239,68,68,0.1)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.3)", padding: "10px", borderRadius: "8px", textAlign: "center", fontSize: "13.5px" }}>{error}</p>}
         <form onSubmit={handleLogin}>
           <div style={{ marginBottom: "16px" }}>
-            <label style={{ display: "block", marginBottom: "6px", color: "#A1A1AA", fontWeight: "500", fontSize: "13px" }}>Email</label>
+            <label style={{ display: "block", marginBottom: "6px", color: "var(--text-secondary)", fontWeight: "500", fontSize: "13px" }}>Email</label>
             <input
               type="email"
               placeholder="you@company.com"
@@ -69,7 +69,7 @@ export default function Login() {
             />
           </div>
           <div style={{ marginBottom: "18px" }}>
-            <label style={{ display: "block", marginBottom: "6px", color: "#A1A1AA", fontWeight: "500", fontSize: "13px" }}>Password</label>
+            <label style={{ display: "block", marginBottom: "6px", color: "var(--text-secondary)", fontWeight: "500", fontSize: "13px" }}>Password</label>
             <input
               type="password"
               placeholder="Enter your password"
@@ -82,15 +82,15 @@ export default function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-        <div style={{ margin: "18px 0", textAlign: "center", color: "#52525B", fontSize: "12px" }}>OR</div>
+        <div style={{ margin: "18px 0", textAlign: "center", color: "var(--text-muted)", fontSize: "12px" }}>OR</div>
         <button onClick={handleGoogle} className="btn-secondary" style={{ width: "100%", padding: "11px", fontSize: "13.5px" }}>
           Sign in with Google
         </button>
         <p style={{ textAlign: "center", marginTop: "18px", fontSize: "13px" }}>
-          <Link to="/forgot-password" style={{ color: "#71717A" }}>Forgot password?</Link>
+          <Link to="/forgot-password" style={{ color: "var(--text-muted)" }}>Forgot password?</Link>
         </p>
-        <p style={{ textAlign: "center", color: "#71717A", fontSize: "13px" }}>
-          No account? <Link to="/signup" style={{ color: "#2563EB", fontWeight: "500" }}>Sign up</Link>
+        <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "13px" }}>
+          No account? <Link to="/signup" style={{ color: "var(--accent)", fontWeight: "500" }}>Sign up</Link>
         </p>
       </div>
     </div>

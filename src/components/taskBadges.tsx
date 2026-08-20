@@ -12,7 +12,7 @@ export const PRIORITY_COLORS: Record<TaskPriority, BadgeColors> = {
 };
 
 export const STATUS_COLORS: Record<TaskStatus, BadgeColors> = {
-  'To Do': { bg: 'rgba(113,113,122,0.15)', text: '#A1A1AA' },
+  'To Do': { bg: 'rgba(113,113,122,0.15)', text: 'var(--text-secondary)' },
   'In Progress': { bg: 'rgba(37,99,235,0.12)', text: '#3B82F6' },
   'Done': { bg: 'rgba(34,197,94,0.12)', text: '#22C55E' },
 };
@@ -41,6 +41,6 @@ export function dueDateInfo(task: { dueDate?: string | null; status?: TaskStatus
     label: overdue ? `Overdue · ${label}` : `Due ${label}`,
     colors: overdue
       ? { bg: 'rgba(239,68,68,0.12)', text: '#EF4444' }
-      : { bg: 'rgba(113,113,122,0.15)', text: '#A1A1AA' },
+      : { bg: 'rgba(113,113,122,0.15)', text: 'var(--text-secondary)' },
   };
 }

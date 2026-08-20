@@ -5,13 +5,13 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import type { Task } from "../types";
 
-const card: React.CSSProperties = { background: "#111113", border: "1px solid #1F1F23", borderRadius: "12px", padding: "24px" };
+const card: React.CSSProperties = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "24px" };
 
 function StatTile({ value, label, color }: { value: number | string; label: string; color: string }) {
   return (
     <div style={{ ...card, padding: "20px", textAlign: "center" }}>
       <h2 style={{ color: color, margin: "0 0 4px", fontSize: "26px", fontWeight: 700 }}>{value}</h2>
-      <p style={{ color: "#71717A", margin: 0, fontSize: "12.5px" }}>{label}</p>
+      <p style={{ color: "var(--text-muted)", margin: 0, fontSize: "12.5px" }}>{label}</p>
     </div>
   );
 }
@@ -22,14 +22,14 @@ function HBarChart({ title, rows }: { title: string; rows: { label: string; valu
   const max = Math.max(...rows.map((r) => r.value), 1);
   return (
     <div style={card}>
-      <h3 style={{ color: "white", margin: "0 0 18px", fontSize: "15px", fontWeight: 600 }}>{title}</h3>
+      <h3 style={{ color: "var(--text-primary)", margin: "0 0 18px", fontSize: "15px", fontWeight: 600 }}>{title}</h3>
       {rows.map((row) => (
         <div key={row.label} style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
-          <span style={{ width: "90px", flexShrink: 0, color: "#A1A1AA", fontSize: "12.5px", textAlign: "right" }}>{row.label}</span>
-          <div style={{ flex: 1, height: "14px", background: "#1F1F23", borderRadius: "4px", overflow: "hidden" }}>
+          <span style={{ width: "90px", flexShrink: 0, color: "var(--text-secondary)", fontSize: "12.5px", textAlign: "right" }}>{row.label}</span>
+          <div style={{ flex: 1, height: "14px", background: "var(--border)", borderRadius: "4px", overflow: "hidden" }}>
             <div style={{ width: `${(row.value / max) * 100}%`, height: "100%", background: row.color, borderRadius: "0 4px 4px 0", transition: "width 0.4s ease" }} />
           </div>
-          <span style={{ width: "24px", flexShrink: 0, color: "#E5E5E7", fontSize: "12.5px", fontWeight: 600 }}>{row.value}</span>
+          <span style={{ width: "24px", flexShrink: 0, color: "var(--text-primary)", fontSize: "12.5px", fontWeight: 600 }}>{row.value}</span>
         </div>
       ))}
     </div>
@@ -54,27 +54,27 @@ function TrendChart({ title, points }: { title: string; points: TrendPoint[] }) 
 
   return (
     <div style={card}>
-      <h3 style={{ color: "white", margin: "0 0 6px", fontSize: "15px", fontWeight: 600 }}>{title}</h3>
-      <p style={{ color: "#71717A", margin: "0 0 12px", fontSize: "12.5px", minHeight: "16px" }}>
+      <h3 style={{ color: "var(--text-primary)", margin: "0 0 6px", fontSize: "15px", fontWeight: 600 }}>{title}</h3>
+      <p style={{ color: "var(--text-muted)", margin: "0 0 12px", fontSize: "12.5px", minHeight: "16px" }}>
         {hover !== null
           ? `${points[hover].fullLabel}: ${points[hover].count} task${points[hover].count === 1 ? "" : "s"}`
           : "Hover a point for details"}
       </p>
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }} onMouseLeave={() => setHover(null)}>
         {[0.5, 1].map((f) => (
-          <line key={f} x1={PAD_X} x2={W - PAD_X} y1={y(max * f)} y2={y(max * f)} stroke="#1F1F23" strokeWidth="1" />
+          <line key={f} x1={PAD_X} x2={W - PAD_X} y1={y(max * f)} y2={y(max * f)} style={{ stroke: 'var(--border)' }} strokeWidth="1" />
         ))}
-        <text x={PAD_X - 6} y={y(max) + 4} fill="#71717A" fontSize="10" textAnchor="end">{max}</text>
-        <text x={PAD_X - 6} y={H - PAD_BOTTOM + 4} fill="#71717A" fontSize="10" textAnchor="end">0</text>
-        <line x1={PAD_X} x2={W - PAD_X} y1={H - PAD_BOTTOM} y2={H - PAD_BOTTOM} stroke="#27272A" strokeWidth="1" />
+        <text x={PAD_X - 6} y={y(max) + 4} style={{ fill: 'var(--text-muted)' }} fontSize="10" textAnchor="end">{max}</text>
+        <text x={PAD_X - 6} y={H - PAD_BOTTOM + 4} style={{ fill: 'var(--text-muted)' }} fontSize="10" textAnchor="end">0</text>
+        <line x1={PAD_X} x2={W - PAD_X} y1={H - PAD_BOTTOM} y2={H - PAD_BOTTOM} style={{ stroke: 'var(--border-strong)' }} strokeWidth="1" />
         <path d={areaPath} fill="rgba(59,130,246,0.12)" />
         <path d={linePath} fill="none" stroke="#3B82F6" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
         {points.map((p, i) => (
           <g key={p.fullLabel}>
-            <circle cx={x(i)} cy={y(p.count)} r={hover === i ? 5 : 3.5} fill="#3B82F6" stroke="#111113" strokeWidth="2" />
+            <circle cx={x(i)} cy={y(p.count)} r={hover === i ? 5 : 3.5} fill="#3B82F6" style={{ stroke: 'var(--surface)' }} strokeWidth="2" />
             {/* larger invisible hit target */}
             <circle cx={x(i)} cy={y(p.count)} r="14" fill="transparent" onMouseEnter={() => setHover(i)} style={{ cursor: "pointer" }} />
-            <text x={x(i)} y={H - 8} fill={hover === i ? "#E5E5E7" : "#71717A"} fontSize="10" textAnchor="middle">{p.label}</text>
+            <text x={x(i)} y={H - 8} style={{ fill: hover === i ? 'var(--text-primary)' : 'var(--text-muted)' }} fontSize="10" textAnchor="middle">{p.label}</text>
           </g>
         ))}
       </svg>
@@ -134,13 +134,13 @@ export default function UserDashboard() {
   }, [tasks]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0A0A0B", padding: "30px" }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg)", padding: "30px" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
         {/* Header */}
         <div style={{ ...card, padding: "26px 30px", marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-            <h1 style={{ margin: 0, fontSize: "22px", color: "white", fontWeight: "600" }}>Your dashboard</h1>
-            <p style={{ margin: "6px 0 0", color: "#71717A", fontSize: "13.5px" }}>{currentUser?.email}</p>
+            <h1 style={{ margin: 0, fontSize: "22px", color: "var(--text-primary)", fontWeight: "600" }}>Your dashboard</h1>
+            <p style={{ margin: "6px 0 0", color: "var(--text-muted)", fontSize: "13.5px" }}>{currentUser?.email}</p>
           </div>
           <button onClick={handleLogout} className="btn-secondary">
             Logout
@@ -152,12 +152,12 @@ export default function UserDashboard() {
           <StatTile value={tasks.length} label="Total tasks" color="#3B82F6" />
           <StatTile value={stats.byStatus["In Progress"]} label="In progress" color="#EAB308" />
           <StatTile value={`${stats.completion}%`} label="Completed" color="#22C55E" />
-          <StatTile value={stats.overdue} label="Overdue" color={stats.overdue > 0 ? "#EF4444" : "#71717A"} />
+          <StatTile value={stats.overdue} label="Overdue" color={stats.overdue > 0 ? "#EF4444" : "var(--text-muted)"} />
         </div>
 
         {tasks.length === 0 ? (
           <div style={{ ...card, textAlign: "center", padding: "48px", marginBottom: "18px" }}>
-            <p style={{ color: "#71717A", fontSize: "14.5px", marginBottom: "18px" }}>No tasks yet — create your first task to see your analytics here.</p>
+            <p style={{ color: "var(--text-muted)", fontSize: "14.5px", marginBottom: "18px" }}>No tasks yet — create your first task to see your analytics here.</p>
             <Link to="/create">
               <button className="btn-primary">Create a task</button>
             </Link>
@@ -169,7 +169,7 @@ export default function UserDashboard() {
               <HBarChart
                 title="Tasks by status"
                 rows={[
-                  { label: "To Do", value: stats.byStatus["To Do"], color: "#A1A1AA" },
+                  { label: "To Do", value: stats.byStatus["To Do"], color: "var(--text-secondary)" },
                   { label: "In Progress", value: stats.byStatus["In Progress"], color: "#3B82F6" },
                   { label: "Done", value: stats.byStatus.Done, color: "#22C55E" },
                 ]}
@@ -193,7 +193,7 @@ export default function UserDashboard() {
 
         {/* Quick Actions */}
         <div style={card}>
-          <h3 style={{ color: "white", marginTop: 0, fontSize: "15px", fontWeight: "600", marginBottom: "16px" }}>Quick actions</h3>
+          <h3 style={{ color: "var(--text-primary)", marginTop: 0, fontSize: "15px", fontWeight: "600", marginBottom: "16px" }}>Quick actions</h3>
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <button onClick={() => navigate("/board")} className="btn-primary">
               Open board

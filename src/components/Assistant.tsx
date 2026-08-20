@@ -14,8 +14,8 @@ interface Suggestion {
   added: boolean;
 }
 
-const card: React.CSSProperties = { background: '#111113', border: '1px solid #1F1F23', borderRadius: '12px', padding: '28px' };
-const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid #27272A', background: '#0A0A0B', color: '#E5E5E7', fontSize: '14px', outline: 'none', margin: 0 };
+const card: React.CSSProperties = { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '28px' };
+const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-strong)', background: 'var(--bg)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', margin: 0 };
 
 function Assistant() {
   const [goal, setGoal] = useState('');
@@ -113,11 +113,11 @@ function Assistant() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0A0B', padding: '30px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
       <div style={{ maxWidth: '700px', margin: '0 auto' }}>
         <div style={{ marginBottom: '24px' }}>
-          <h2 style={{ color: '#E5E5E7', margin: 0, fontSize: '22px', fontWeight: 600 }}>✨ AI Assistant</h2>
-          <p style={{ color: '#71717A', margin: '6px 0 0', fontSize: '13.5px' }}>
+          <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '22px', fontWeight: 600 }}>✨ AI Assistant</h2>
+          <p style={{ color: 'var(--text-muted)', margin: '6px 0 0', fontSize: '13.5px' }}>
             Powered by Llama 3.3 70B — break down goals into tasks, or get a summary of your workload.
           </p>
         </div>
@@ -130,8 +130,8 @@ function Assistant() {
 
         {/* Goal breakdown */}
         <div style={{ ...card, marginBottom: '18px' }}>
-          <h3 style={{ color: 'white', margin: '0 0 6px', fontSize: '15px', fontWeight: 600 }}>Break a goal into tasks</h3>
-          <p style={{ color: '#71717A', margin: '0 0 16px', fontSize: '13px' }}>
+          <h3 style={{ color: 'var(--text-primary)', margin: '0 0 6px', fontSize: '15px', fontWeight: 600 }}>Break a goal into tasks</h3>
+          <p style={{ color: 'var(--text-muted)', margin: '0 0 16px', fontSize: '13px' }}>
             Describe what you want to achieve and the AI will plan the tasks for you.
           </p>
           <form onSubmit={generateBreakdown} style={{ display: 'flex', gap: '10px' }}>
@@ -150,18 +150,18 @@ function Assistant() {
           {suggestions.length > 0 && (
             <div style={{ marginTop: '20px' }}>
               {suggestions.map((t, i) => (
-                <div key={i} style={{ background: '#18181B', border: '1px solid #27272A', borderRadius: '10px', padding: '14px 16px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
+                <div key={i} style={{ background: 'var(--surface-2)', border: '1px solid var(--border-strong)', borderRadius: '10px', padding: '14px 16px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ marginBottom: '6px' }}>
                       <Badge label={t.priority} colors={PRIORITY_COLORS[t.priority]} />
                     </div>
-                    <h4 style={{ margin: '0 0 4px', color: '#E5E5E7', fontSize: '14px', fontWeight: 600 }}>{t.title}</h4>
-                    <p style={{ margin: 0, color: '#A1A1AA', fontSize: '13px' }}>{t.description}</p>
+                    <h4 style={{ margin: '0 0 4px', color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>{t.title}</h4>
+                    <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '13px' }}>{t.description}</p>
                   </div>
                   <button
                     onClick={() => addTask(i)}
                     disabled={t.added}
-                    style={{ padding: '8px 14px', background: t.added ? 'transparent' : '#1F1F23', color: t.added ? '#22C55E' : '#E5E5E7', border: `1px solid ${t.added ? 'rgba(34,197,94,0.3)' : '#27272A'}`, borderRadius: '8px', cursor: t.added ? 'default' : 'pointer', fontWeight: 500, fontSize: '13px', flexShrink: 0 }}
+                    style={{ padding: '8px 14px', background: t.added ? 'transparent' : 'var(--border)', color: t.added ? '#22C55E' : 'var(--text-primary)', border: `1px solid ${t.added ? 'rgba(34,197,94,0.3)' : 'var(--border-strong)'}`, borderRadius: '8px', cursor: t.added ? 'default' : 'pointer', fontWeight: 500, fontSize: '13px', flexShrink: 0 }}
                   >
                     {t.added ? '✓ Added' : 'Add task'}
                   </button>
@@ -181,15 +181,15 @@ function Assistant() {
 
         {/* Workload summary */}
         <div style={card}>
-          <h3 style={{ color: 'white', margin: '0 0 6px', fontSize: '15px', fontWeight: 600 }}>Summarize my workload</h3>
-          <p style={{ color: '#71717A', margin: '0 0 16px', fontSize: '13px' }}>
+          <h3 style={{ color: 'var(--text-primary)', margin: '0 0 6px', fontSize: '15px', fontWeight: 600 }}>Summarize my workload</h3>
+          <p style={{ color: 'var(--text-muted)', margin: '0 0 16px', fontSize: '13px' }}>
             Get a quick AI overview of your open tasks and what to tackle next.
           </p>
           <button onClick={generateSummary} disabled={summaryLoading} className="btn-secondary" style={{ opacity: summaryLoading ? 0.7 : 1 }}>
             {summaryLoading ? 'Analyzing…' : 'Generate summary'}
           </button>
           {summary && (
-            <p style={{ marginTop: '16px', marginBottom: 0, background: '#18181B', border: '1px solid #27272A', borderRadius: '10px', padding: '16px', color: '#E5E5E7', fontSize: '13.5px', lineHeight: 1.6 }}>
+            <p style={{ marginTop: '16px', marginBottom: 0, background: 'var(--surface-2)', border: '1px solid var(--border-strong)', borderRadius: '10px', padding: '16px', color: 'var(--text-primary)', fontSize: '13.5px', lineHeight: 1.6 }}>
               {summary}
             </p>
           )}

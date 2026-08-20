@@ -7,9 +7,9 @@ import { useToast } from '../Toast';
 
 const AVATAR_COLORS = ['#2563EB', '#7C3AED', '#DB2777', '#EF4444', '#EA580C', '#EAB308', '#22C55E', '#0D9488'];
 
-const card: React.CSSProperties = { background: '#111113', border: '1px solid #1F1F23', borderRadius: '12px', padding: '28px' };
-const labelStyle: React.CSSProperties = { display: 'block', marginBottom: '8px', color: '#A1A1AA', fontWeight: 500, fontSize: '13px' };
-const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid #27272A', background: '#0A0A0B', color: '#E5E5E7', fontSize: '14px', outline: 'none', margin: 0 };
+const card: React.CSSProperties = { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', padding: '28px' };
+const labelStyle: React.CSSProperties = { display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontWeight: 500, fontSize: '13px' };
+const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-strong)', background: 'var(--bg)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', margin: 0 };
 
 function Profile() {
   const { currentUser, userRole } = useAuth();
@@ -58,28 +58,28 @@ function Profile() {
   const initial = (displayName || currentUser?.email || '?')[0].toUpperCase();
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0A0B', display: 'flex', justifyContent: 'center', padding: '40px 30px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', justifyContent: 'center', padding: '40px 30px' }}>
       <div style={{ width: '100%', maxWidth: '520px' }}>
         <div style={{ ...card, marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '20px' }}>
           <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: avatarColor, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '26px', fontWeight: 700, flexShrink: 0 }}>
             {initial}
           </div>
           <div style={{ minWidth: 0 }}>
-            <h2 style={{ color: '#E5E5E7', margin: 0, fontSize: '20px', fontWeight: 600 }}>
+            <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '20px', fontWeight: 600 }}>
               {displayName || 'Unnamed user'}
             </h2>
-            <p style={{ color: '#71717A', margin: '4px 0 0', fontSize: '13.5px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser?.email}</p>
+            <p style={{ color: 'var(--text-muted)', margin: '4px 0 0', fontSize: '13.5px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser?.email}</p>
             <div style={{ marginTop: '8px', display: 'flex', gap: '8px', alignItems: 'center' }}>
               <span style={{ background: userRole === 'admin' ? 'rgba(234,179,8,0.12)' : 'rgba(37,99,235,0.12)', color: userRole === 'admin' ? '#EAB308' : '#3B82F6', padding: '3px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 500 }}>
                 {userRole || 'user'}
               </span>
-              {joined && <span style={{ color: '#71717A', fontSize: '12px' }}>Joined {joined}</span>}
+              {joined && <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>Joined {joined}</span>}
             </div>
           </div>
         </div>
 
         <form onSubmit={handleSave} style={card}>
-          <h3 style={{ color: 'white', margin: '0 0 20px', fontSize: '15px', fontWeight: 600 }}>Edit profile</h3>
+          <h3 style={{ color: 'var(--text-primary)', margin: '0 0 20px', fontSize: '15px', fontWeight: 600 }}>Edit profile</h3>
           <div style={{ marginBottom: '20px' }}>
             <label style={labelStyle}>Display name</label>
             <input
@@ -102,7 +102,7 @@ function Profile() {
                   aria-label={`Avatar color ${color}`}
                   style={{
                     width: '32px', height: '32px', borderRadius: '50%', background: color,
-                    border: avatarColor === color ? '2px solid #E5E5E7' : '2px solid transparent',
+                    border: avatarColor === color ? '2px solid var(--text-primary)' : '2px solid transparent',
                     cursor: 'pointer', padding: 0,
                   }}
                 />

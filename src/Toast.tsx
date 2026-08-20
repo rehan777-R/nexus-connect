@@ -39,7 +39,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               key={toast.id}
               style={{
                 display: "flex", alignItems: "center", gap: "10px",
-                background: "#18181B", border: `1px solid ${colors.border}`,
+                background: "var(--surface-2)", border: `1px solid ${colors.border}`,
                 borderRadius: "10px", padding: "12px 18px", minWidth: "240px", maxWidth: "360px",
                 boxShadow: "0 8px 24px rgba(0,0,0,0.5)", animation: "toast-in 0.25s ease",
               }}
@@ -52,7 +52,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               }}>
                 {colors.symbol}
               </span>
-              <span style={{ color: "#E5E5E7", fontSize: "13.5px" }}>{toast.message}</span>
+              <span style={{ color: "var(--text-primary)", fontSize: "13.5px" }}>{toast.message}</span>
             </div>
           );
         })}

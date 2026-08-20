@@ -24,15 +24,15 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0A0A0B", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ background: "#111113", border: "1px solid #1F1F23", padding: "36px", borderRadius: "12px", width: "100%", maxWidth: "380px" }}>
-        <h2 style={{ textAlign: "center", marginBottom: "8px", color: "white", fontSize: "22px", fontWeight: "600" }}>Reset password</h2>
-        <p style={{ textAlign: "center", color: "#71717A", marginBottom: "22px", fontSize: "13.5px" }}>Enter your email and we'll send you a reset link.</p>
+    <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "36px", borderRadius: "12px", width: "100%", maxWidth: "380px" }}>
+        <h2 style={{ textAlign: "center", marginBottom: "8px", color: "var(--text-primary)", fontSize: "22px", fontWeight: "600" }}>Reset password</h2>
+        <p style={{ textAlign: "center", color: "var(--text-muted)", marginBottom: "22px", fontSize: "13.5px" }}>Enter your email and we'll send you a reset link.</p>
         {error && <p style={{ background: "rgba(239,68,68,0.1)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.3)", padding: "10px", borderRadius: "8px", textAlign: "center", fontSize: "13.5px" }}>{error}</p>}
         {message && <p style={{ background: "rgba(34,197,94,0.1)", color: "#22C55E", border: "1px solid rgba(34,197,94,0.3)", padding: "10px", borderRadius: "8px", textAlign: "center", fontSize: "13.5px" }}>{message}</p>}
         <form onSubmit={handleReset}>
           <div style={{ marginBottom: "18px" }}>
-            <label style={{ display: "block", marginBottom: "6px", color: "#A1A1AA", fontWeight: "500", fontSize: "13px" }}>Email</label>
+            <label style={{ display: "block", marginBottom: "6px", color: "var(--text-secondary)", fontWeight: "500", fontSize: "13px" }}>Email</label>
             <input
               type="email"
               placeholder="you@company.com"
@@ -46,7 +46,7 @@ export default function ForgotPassword() {
           </button>
         </form>
         <p style={{ textAlign: "center", marginTop: "18px", fontSize: "13px" }}>
-          <Link to="/login" style={{ color: "#71717A" }}>Back to login</Link>
+          <Link to="/login" style={{ color: "var(--text-muted)" }}>Back to login</Link>
         </p>
       </div>
     </div>

@@ -8,7 +8,7 @@ import { PRIORITY_COLORS, Badge, dueDateInfo } from './taskBadges';
 import type { Task, TaskStatus } from '../types';
 
 const COLUMNS: { status: TaskStatus; accent: string }[] = [
-  { status: 'To Do', accent: '#A1A1AA' },
+  { status: 'To Do', accent: 'var(--text-secondary)' },
   { status: 'In Progress', accent: '#3B82F6' },
   { status: 'Done', accent: '#22C55E' },
 ];
@@ -49,21 +49,21 @@ function Board() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0A0B', padding: '30px' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
           <div>
-            <h2 style={{ color: '#E5E5E7', margin: 0, fontSize: '22px', fontWeight: 600 }}>Board</h2>
-            <p style={{ color: '#71717A', margin: '4px 0 0', fontSize: '13.5px' }}>Drag tasks between columns to update their status.</p>
+            <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '22px', fontWeight: 600 }}>Board</h2>
+            <p style={{ color: 'var(--text-muted)', margin: '4px 0 0', fontSize: '13.5px' }}>Drag tasks between columns to update their status.</p>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <Link to="/items">
-              <button style={{ padding: '10px 18px', background: '#1F1F23', color: '#E5E5E7', border: '1px solid #27272A', borderRadius: '8px', fontWeight: 500, fontSize: '14px', cursor: 'pointer' }}>
+              <button style={{ padding: '10px 18px', background: 'var(--border)', color: 'var(--text-primary)', border: '1px solid var(--border-strong)', borderRadius: '8px', fontWeight: 500, fontSize: '14px', cursor: 'pointer' }}>
                 List view
               </button>
             </Link>
             <Link to="/create">
-              <button style={{ padding: '10px 18px', background: '#2563EB', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+              <button style={{ padding: '10px 18px', background: 'var(--accent)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
                 Create New
               </button>
             </Link>
@@ -81,8 +81,8 @@ function Board() {
                 onDragLeave={() => setDragOverCol(null)}
                 onDrop={(e) => handleDrop(e, col.status)}
                 style={{
-                  background: '#111113',
-                  border: `1px solid ${isOver ? col.accent : '#1F1F23'}`,
+                  background: 'var(--surface)',
+                  border: `1px solid ${isOver ? col.accent : 'var(--border)'}`,
                   borderRadius: '12px',
                   padding: '16px',
                   minHeight: '300px',
@@ -91,12 +91,12 @@ function Board() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: col.accent }} />
-                  <h3 style={{ color: '#E5E5E7', margin: 0, fontSize: '14px', fontWeight: 600 }}>{col.status}</h3>
-                  <span style={{ color: '#71717A', fontSize: '12.5px', marginLeft: 'auto' }}>{colTasks.length}</span>
+                  <h3 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '14px', fontWeight: 600 }}>{col.status}</h3>
+                  <span style={{ color: 'var(--text-muted)', fontSize: '12.5px', marginLeft: 'auto' }}>{colTasks.length}</span>
                 </div>
 
                 {colTasks.length === 0 && (
-                  <p style={{ color: '#71717A', fontSize: '13px', textAlign: 'center', padding: '30px 0', border: '1px dashed #27272A', borderRadius: '8px' }}>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '13px', textAlign: 'center', padding: '30px 0', border: '1px dashed var(--border-strong)', borderRadius: '8px' }}>
                     {isOver ? 'Drop here' : 'No tasks'}
                   </p>
                 )}
@@ -113,8 +113,8 @@ function Board() {
                       }}
                       onDragEnd={() => { setDraggingId(null); setDragOverCol(null); }}
                       style={{
-                        background: '#18181B',
-                        border: '1px solid #27272A',
+                        background: 'var(--surface-2)',
+                        border: '1px solid var(--border-strong)',
                         borderRadius: '10px',
                         padding: '14px',
                         marginBottom: '10px',
@@ -127,13 +127,13 @@ function Board() {
                         {due && <Badge label={due.label} colors={due.colors} />}
                       </div>
                       <Link to={`/items/${task.id}`} style={{ textDecoration: 'none' }}>
-                        <h4 style={{ margin: '0 0 4px', color: '#E5E5E7', fontSize: '14px', fontWeight: 600 }}>{task.title}</h4>
+                        <h4 style={{ margin: '0 0 4px', color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>{task.title}</h4>
                       </Link>
-                      <p style={{ margin: 0, color: '#A1A1AA', fontSize: '12.5px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '12.5px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {task.description}
                       </p>
                       {userRole === 'admin' && (
-                        <p style={{ margin: '8px 0 0', color: '#71717A', fontSize: '11.5px' }}>{task.createdByEmail}</p>
+                        <p style={{ margin: '8px 0 0', color: 'var(--text-muted)', fontSize: '11.5px' }}>{task.createdByEmail}</p>
                       )}
                     </div>
                   );
