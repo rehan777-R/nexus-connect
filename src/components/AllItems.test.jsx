@@ -2,14 +2,16 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import AllItems from './AllItems';
-import { getDocs } from 'firebase/firestore';
+import { getDocs, query, where } from 'firebase/firestore';
 import { useAuth } from '../AuthContext';
 
 vi.mock('../firebase', () => ({ db: {} }));
 vi.mock('../AuthContext', () => ({ useAuth: vi.fn() }));
 vi.mock('../Toast', () => ({ useToast: () => vi.fn() }));
 vi.mock('firebase/firestore', () => ({
-  collection: vi.fn(),
+  collection: vi.fn(() => 'items-ref'),
+  query: vi.fn(() => 'scoped-query'),
+  where: vi.fn(),
   getDocs: vi.fn(),
   deleteDoc: vi.fn(),
   addDoc: vi.fn(),
@@ -39,30 +41,33 @@ function renderPage() {
 afterEach(() => vi.clearAllMocks());
 
 describe('AllItems', () => {
-  it('shows a regular user only their own tasks', async () => {
+  it('queries only the user\'s own tasks for a regular user', async () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'me', email: 'me@x.com' }, userRole: 'user' });
-    stubTasks(TASKS);
+    stubTasks(TASKS.filter((t) => t.createdBy === 'me'));
     renderPage();
 
     expect(await screen.findByText('Fix navbar bug')).toBeInTheDocument();
     expect(screen.getByText('Write docs')).toBeInTheDocument();
-    expect(screen.queryByText('Set up CI')).not.toBeInTheDocument();
+    expect(where).toHaveBeenCalledWith('createdBy', '==', 'me');
+    expect(getDocs).toHaveBeenCalledWith('scoped-query');
     expect(screen.getByRole('heading', { name: 'My Tasks' })).toBeInTheDocument();
   });
 
-  it('shows an admin every task from every user', async () => {
+  it('queries the whole collection for an admin', async () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'admin-uid', email: 'admin@x.com' }, userRole: 'admin' });
     stubTasks(TASKS);
     renderPage();
 
     expect(await screen.findByText('Set up CI')).toBeInTheDocument();
     expect(screen.getByText('Fix navbar bug')).toBeInTheDocument();
+    expect(query).not.toHaveBeenCalled();
+    expect(getDocs).toHaveBeenCalledWith('items-ref');
     expect(screen.getByRole('heading', { name: 'All Tasks' })).toBeInTheDocument();
   });
 
   it('filters tasks by search text', async () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'me', email: 'me@x.com' }, userRole: 'user' });
-    stubTasks(TASKS);
+    stubTasks(TASKS.filter((t) => t.createdBy === 'me'));
     renderPage();
     await screen.findByText('Fix navbar bug');
 
@@ -73,7 +78,7 @@ describe('AllItems', () => {
 
   it('filters tasks by status', async () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'me', email: 'me@x.com' }, userRole: 'user' });
-    stubTasks(TASKS);
+    stubTasks(TASKS.filter((t) => t.createdBy === 'me'));
     renderPage();
     await screen.findByText('Fix navbar bug');
 
@@ -84,7 +89,7 @@ describe('AllItems', () => {
 
   it('tells the user when no task matches the filters', async () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'me', email: 'me@x.com' }, userRole: 'user' });
-    stubTasks(TASKS);
+    stubTasks(TASKS.filter((t) => t.createdBy === 'me'));
     renderPage();
     await screen.findByText('Fix navbar bug');
 

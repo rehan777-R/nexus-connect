@@ -1,0 +1,73 @@
+rules_version = '2';
+
+// Server-side enforcement of the app's role model. The React route guards
+// are UX only — these rules are what actually protects the data.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // User profiles. Everyone signed in can read them (chat contact list,
+    // presence, admin attribution), but only the owner can write — and
+    // never their own role. Only an admin can change roles.
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.data.get('role', 'user') == 'user';
+      allow update: if isSignedIn() && (
+        (request.auth.uid == uid
+          && request.resource.data.get('role', 'user') == resource.data.get('role', 'user'))
+        || isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Tasks. Owners manage their own; admins manage everything.
+    match /items/{itemId} {
+      allow read, update, delete: if isSignedIn()
+        && (resource.data.createdBy == request.auth.uid || isAdmin());
+      allow create: if isSignedIn()
+        && request.resource.data.createdBy == request.auth.uid;
+    }
+
+    // One-to-one chat. Only the two participants (and admins, for the
+    // moderation review queue) can read a message. Senders may edit or
+    // delete their own messages; receivers may only toggle reactions.
+    match /messages/{messageId} {
+      allow read: if isSignedIn() && (
+        resource.data.senderId == request.auth.uid
+        || resource.data.receiverId == request.auth.uid
+        || isAdmin()
+      );
+      allow create: if isSignedIn()
+        && request.resource.data.senderId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        resource.data.senderId == request.auth.uid
+        || (resource.data.receiverId == request.auth.uid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions']))
+      );
+      allow delete: if isSignedIn() && resource.data.senderId == request.auth.uid;
+    }
+
+    // Typing indicators, doc id is "<senderUid>_<receiverUid>".
+    // Only the sender half of the id may write their own indicator.
+    match /typing/{indicatorId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn()
+        && indicatorId.matches('^' + request.auth.uid + '_.*');
+    }
+
+    // Everything else is denied by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

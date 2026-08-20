@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { collection, getDocs, deleteDoc, addDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, addDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -29,17 +29,16 @@ function AllItems() {
   const showToast = useToast();
 
   const fetchItems = async () => {
-    const querySnapshot = await getDocs(collection(db, 'items'));
-    const itemsList = querySnapshot.docs.map((doc) => ({
+    // Admins query everything; regular users only query their own tasks.
+    // Firestore security rules reject broader reads, so the scoping must
+    // happen in the query itself, not client-side filtering.
+    const ref = collection(db, 'items');
+    const q = userRole === 'admin' ? ref : query(ref, where('createdBy', '==', currentUser.uid));
+    const querySnapshot = await getDocs(q);
+    setItems(querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    }));
-    // Admin sab dekhe, user sirf apne
-    if (userRole === 'admin') {
-      setItems(itemsList);
-    } else {
-      setItems(itemsList.filter(item => item.createdBy === currentUser.uid));
-    }
+    })));
   };
 
   useEffect(() => {

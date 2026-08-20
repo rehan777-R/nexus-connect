@@ -1,14 +1,16 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Board from './Board';
-import { onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import { onSnapshot, updateDoc, doc, query, where } from 'firebase/firestore';
 import { useAuth } from '../AuthContext';
 
 vi.mock('../firebase', () => ({ db: {} }));
 vi.mock('../AuthContext', () => ({ useAuth: vi.fn() }));
 vi.mock('../Toast', () => ({ useToast: () => vi.fn() }));
 vi.mock('firebase/firestore', () => ({
-  collection: vi.fn(),
+  collection: vi.fn(() => 'items-ref'),
+  query: vi.fn(() => 'scoped-query'),
+  where: vi.fn(),
   onSnapshot: vi.fn(),
   updateDoc: vi.fn(),
   doc: vi.fn((_db, col, id) => `${col}/${id}`),
@@ -44,9 +46,9 @@ function renderBoard() {
 afterEach(() => vi.clearAllMocks());
 
 describe('Board', () => {
-  it('renders the three Kanban columns with the user\'s own tasks', () => {
+  it('renders the three Kanban columns with a query scoped to the user\'s own tasks', () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'me' }, userRole: 'user' });
-    stubSnapshot(TASKS);
+    stubSnapshot(TASKS.filter((t) => t.createdBy === 'me'));
     renderBoard();
 
     expect(screen.getByRole('heading', { name: 'To Do' })).toBeInTheDocument();
@@ -54,19 +56,22 @@ describe('Board', () => {
     expect(screen.getByRole('heading', { name: 'Done' })).toBeInTheDocument();
     expect(screen.getByText('Design mockup')).toBeInTheDocument();
     expect(screen.getByText('Ship release')).toBeInTheDocument();
-    expect(screen.queryByText('Other user task')).not.toBeInTheDocument();
+    expect(where).toHaveBeenCalledWith('createdBy', '==', 'me');
+    expect(onSnapshot).toHaveBeenCalledWith('scoped-query', expect.any(Function));
   });
 
-  it('shows an admin tasks from every user', () => {
+  it('subscribes an admin to every user\'s tasks', () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'admin-uid' }, userRole: 'admin' });
     stubSnapshot(TASKS);
     renderBoard();
     expect(screen.getByText('Other user task')).toBeInTheDocument();
+    expect(query).not.toHaveBeenCalled();
+    expect(onSnapshot).toHaveBeenCalledWith('items-ref', expect.any(Function));
   });
 
   it('updates the task status in Firestore when dropped on another column', async () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'me' }, userRole: 'user' });
-    stubSnapshot(TASKS);
+    stubSnapshot(TASKS.filter((t) => t.createdBy === 'me'));
     renderBoard();
 
     dropOnColumn('In Progress', 't1');
@@ -78,7 +83,7 @@ describe('Board', () => {
 
   it('does not write to Firestore when dropped on its current column', async () => {
     useAuth.mockReturnValue({ currentUser: { uid: 'me' }, userRole: 'user' });
-    stubSnapshot(TASKS);
+    stubSnapshot(TASKS.filter((t) => t.createdBy === 'me'));
     renderBoard();
 
     dropOnColumn('To Do', 't1');

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 
 const card = { background: "#111113", border: "1px solid #1F1F23", borderRadius: "12px", padding: "24px" };
@@ -83,12 +83,11 @@ export default function UserDashboard() {
   useEffect(() => {
     if (!currentUser) return;
     async function fetchTasks() {
-      const snap = await getDocs(collection(db, "items"));
-      setTasks(
-        snap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .filter((t) => t.createdBy === currentUser.uid)
-      );
+      // The dashboard shows personal analytics, so only query own tasks —
+      // security rules also reject anything broader for non-admins.
+      const q = query(collection(db, "items"), where("createdBy", "==", currentUser.uid));
+      const snap = await getDocs(q);
+      setTasks(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     }
     fetchTasks();
   }, [currentUser]);

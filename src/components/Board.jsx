@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, updateDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
@@ -21,10 +21,12 @@ function Board() {
 
   useEffect(() => {
     if (!currentUser) return;
-    const unsub = onSnapshot(collection(db, 'items'), (snapshot) => {
-      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-      // Admin sab dekhe, user sirf apne
-      setTasks(userRole === 'admin' ? list : list.filter((t) => t.createdBy === currentUser.uid));
+    // Scope the query server-side: security rules only allow reading your
+    // own tasks unless you're an admin.
+    const ref = collection(db, 'items');
+    const q = userRole === 'admin' ? ref : query(ref, where('createdBy', '==', currentUser.uid));
+    const unsub = onSnapshot(q, (snapshot) => {
+      setTasks(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
     });
     return () => unsub();
   }, [currentUser, userRole]);
