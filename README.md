@@ -38,6 +38,11 @@ A full-stack team workspace built with **React**, **TypeScript** and **Firebase*
 - Stat tiles: totals, in-progress, completion rate, overdue count
 - Charts: tasks by status, tasks by priority, and a 7-day creation trend (hand-rolled SVG, no chart library)
 
+### UI/UX
+- **Light/dark mode** with a persisted toggle, built on a CSS design-token system
+- Responsive: Kanban stacks on mobile, chat sidebar collapses, hamburger navigation
+- Skeleton loaders for Firestore fetches, per-route page titles, toast notifications, drag-and-drop drop-zone feedback, keyboard-visible focus states
+
 ### Auth & roles
 - Firebase Authentication with **email/password** and **Google sign-in**
 - **Admin / user roles** enforced twice: protected routes in the client and **Firestore security rules** at the database layer
@@ -155,4 +160,19 @@ firebase deploy --only firestore:rules
 
 ## Screenshots
 
-> _Add screenshots of the board, chat, and dashboard here — e.g. `docs/board.png`, `docs/chat.png`, `docs/dashboard.png`._
+<!-- TODO(rehan): capture these from the live demo after deploying, save to docs/, then delete this comment.
+     Suggested shots (1440px-wide browser window, dark theme):
+       docs/assistant.png  — AI Assistant mid-flow: stepper on step 3 with AI-generated task cards visible
+       docs/board.png      — Kanban board with a card mid-drag over a highlighted column
+       docs/chat.png       — chat with presence dot, typing indicator or a reaction visible
+       docs/moderation.png — Admin dashboard "Moderation review queue" with a flagged message
+       docs/dashboard.png  — analytics dashboard with stat tiles and the 7-day trend chart
+     Then replace this section with:
+       ![AI Assistant](docs/assistant.png)
+       ![Kanban board](docs/board.png)
+       ![Chat with AI moderation](docs/chat.png)
+       ![Moderation queue](docs/moderation.png)
+       ![Analytics dashboard](docs/dashboard.png)
+-->
+
+> _Screenshots coming soon — the app ships with a light/dark theme toggle, an agentic AI planning flow, and an AI moderation review queue. See the [live demo](https://web-assignment-4-ten.vercel.app)._
