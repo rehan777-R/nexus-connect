@@ -1,3 +1,4 @@
+import { usePageTitle } from '../usePageTitle';
 import React, { useState, useEffect } from 'react';
 import { collection, onSnapshot, updateDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -14,6 +15,7 @@ const COLUMNS: { status: TaskStatus; accent: string }[] = [
 ];
 
 function Board() {
+  usePageTitle('Board');
   const [tasks, setTasks] = useState<Task[]>([]);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOverCol, setDragOverCol] = useState<TaskStatus | null>(null);
@@ -49,7 +51,7 @@ function Board() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
+    <div className="page" style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
           <div>

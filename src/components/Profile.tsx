@@ -1,3 +1,4 @@
+import { usePageTitle } from '../usePageTitle';
 import React, { useEffect, useState } from 'react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
@@ -12,6 +13,7 @@ const labelStyle: React.CSSProperties = { display: 'block', marginBottom: '8px',
 const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-strong)', background: 'var(--bg)', color: 'var(--text-primary)', fontSize: '14px', outline: 'none', margin: 0 };
 
 function Profile() {
+  usePageTitle('Profile');
   const { currentUser, userRole } = useAuth();
   const showToast = useToast();
   const [displayName, setDisplayName] = useState('');
@@ -58,7 +60,7 @@ function Profile() {
   const initial = (displayName || currentUser?.email || '?')[0].toUpperCase();
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', justifyContent: 'center', padding: '40px 30px' }}>
+    <div className="page" style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', justifyContent: 'center', padding: '40px 30px' }}>
       <div style={{ width: '100%', maxWidth: '520px' }}>
         <div style={{ ...card, marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '20px' }}>
           <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: avatarColor, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '26px', fontWeight: 700, flexShrink: 0 }}>

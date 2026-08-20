@@ -1,3 +1,4 @@
+import { usePageTitle } from '../usePageTitle';
 import React, { useState, useEffect, useMemo } from 'react';
 import { collection, getDocs, deleteDoc, addDoc, doc, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -5,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../Toast';
 import { PRIORITY_COLORS, STATUS_COLORS, Badge, dueDateInfo } from './taskBadges';
+import { SkeletonCard } from './Skeleton';
 import type { Task } from '../types';
 
 const SAMPLE_TASKS: Omit<Task, 'id' | 'createdBy' | 'createdByEmail' | 'createdAt'>[] = [
@@ -20,7 +22,9 @@ const PRIORITY_ORDER: Record<string, number> = { High: 0, Medium: 1, Low: 2 };
 const filterSelectStyle: React.CSSProperties = { width: 'auto', padding: '9px 12px', borderRadius: '8px', border: '1px solid var(--border-strong)', background: 'var(--surface)', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', margin: 0 };
 
 function AllItems() {
+  usePageTitle('Tasks');
   const [items, setItems] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
   const [loadingSamples, setLoadingSamples] = useState(false);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
@@ -41,6 +45,7 @@ function AllItems() {
       id: doc.id,
       ...doc.data(),
     } as Task)));
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -107,7 +112,7 @@ function AllItems() {
   const hasFilters = search.trim() || filterStatus !== 'All' || filterPriority !== 'All';
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
+    <div className="page" style={{ minHeight: '100vh', background: 'var(--bg)', padding: '30px' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
           <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '22px', fontWeight: 600 }}>{userRole === 'admin' ? 'All Tasks' : 'My Tasks'}</h2>
@@ -156,7 +161,13 @@ function AllItems() {
           </div>
         )}
 
-        {items.length === 0 ? (
+        {loading ? (
+          <>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </>
+        ) : items.length === 0 ? (
           <div style={{ background: 'var(--surface)', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid var(--border)' }}>
             <p style={{ color: 'var(--text-muted)', fontSize: '15px', marginBottom: '20px' }}>No tasks found.</p>
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>

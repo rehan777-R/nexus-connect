@@ -1,3 +1,4 @@
+import { usePageTitle } from '../usePageTitle';
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import { db } from "../firebase";
 import type { Message, Task, UserProfile } from "../types";
 
 export default function AdminDashboard() {
+  usePageTitle('Admin');
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [users, setUsers] = useState<UserProfile[]>([]);
@@ -45,7 +47,7 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", padding: "30px" }}>
+    <div className="page" style={{ minHeight: "100vh", background: "var(--bg)", padding: "30px" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
 
         {/* Header */}

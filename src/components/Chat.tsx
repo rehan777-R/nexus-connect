@@ -1,3 +1,4 @@
+import { usePageTitle } from '../usePageTitle';
 import { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -7,6 +8,7 @@ import ChatInput from "./ChatInput";
 import type { ChatUser } from "../types";
 
 const Chat = () => {
+  usePageTitle('Chat');
   const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
 
   useEffect(() => {

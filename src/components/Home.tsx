@@ -14,7 +14,7 @@ const features = [
 function Home() {
   const { currentUser, userRole } = useAuth();
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+    <div className="page" style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       {/* Hero Section */}
       <div style={{ padding: '90px 30px 70px', textAlign: 'center', borderBottom: '1px solid var(--border)' }}>
         <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>

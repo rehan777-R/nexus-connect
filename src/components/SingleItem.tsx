@@ -1,3 +1,4 @@
+import { usePageTitle } from '../usePageTitle';
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -7,6 +8,7 @@ import { PRIORITY_COLORS, STATUS_COLORS, Badge } from './taskBadges';
 import type { Task } from '../types';
 
 function SingleItem() {
+  usePageTitle('Task details');
   const [item, setItem] = useState<Task | null>(null);
   const { id } = useParams() as { id: string };
   const { currentUser, userRole } = useAuth();
@@ -21,7 +23,7 @@ function SingleItem() {
     fetchItem();
   }, [id]);
   if (!item) return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div className="page" style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ fontSize: '15px', color: 'var(--text-muted)' }}>Loading...</div>
     </div>
   );

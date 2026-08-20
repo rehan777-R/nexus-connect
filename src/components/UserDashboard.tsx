@@ -1,8 +1,10 @@
+import { usePageTitle } from '../usePageTitle';
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
+import { Skeleton } from "./Skeleton";
 import type { Task } from "../types";
 
 const card: React.CSSProperties = { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "24px" };
@@ -83,9 +85,11 @@ function TrendChart({ title, points }: { title: string; points: TrendPoint[] }) 
 }
 
 export default function UserDashboard() {
+  usePageTitle('Dashboard');
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -96,6 +100,7 @@ export default function UserDashboard() {
       const q = query(collection(db, "items"), where("createdBy", "==", uid));
       const snap = await getDocs(q);
       setTasks(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Task)));
+      setLoading(false);
     }
     fetchTasks();
   }, [currentUser]);
@@ -134,7 +139,7 @@ export default function UserDashboard() {
   }, [tasks]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", padding: "30px" }}>
+    <div className="page" style={{ minHeight: "100vh", background: "var(--bg)", padding: "30px" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
         {/* Header */}
         <div style={{ ...card, padding: "26px 30px", marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -147,6 +152,15 @@ export default function UserDashboard() {
           </button>
         </div>
 
+        {loading ? (
+          <>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "14px", marginBottom: "18px" }}>
+              {[0, 1, 2, 3].map((i) => <Skeleton key={i} height={84} style={{ borderRadius: "12px" }} />)}
+            </div>
+            <Skeleton height={220} style={{ borderRadius: "12px", marginBottom: "18px" }} />
+          </>
+        ) : (
+        <>
         {/* Stat tiles */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "14px", marginBottom: "18px" }}>
           <StatTile value={tasks.length} label="Total tasks" color="#3B82F6" />
@@ -189,6 +203,8 @@ export default function UserDashboard() {
               <TrendChart title="Tasks created — last 7 days" points={stats.trend} />
             </div>
           </>
+        )}
+        </>
         )}
 
         {/* Quick Actions */}

@@ -1,8 +1,10 @@
+import { usePageTitle } from './usePageTitle';
 import { useState } from "react";
 import { useAuth } from "./AuthContext";
 import { Link } from "react-router-dom";
 
 export default function ForgotPassword() {
+  usePageTitle('Reset password');
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -24,8 +26,11 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div className="page" style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "36px", borderRadius: "12px", width: "100%", maxWidth: "380px" }}>
+        <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
+          <span style={{ color: "white", fontSize: "20px", fontWeight: 700 }}>N</span>
+        </div>
         <h2 style={{ textAlign: "center", marginBottom: "8px", color: "var(--text-primary)", fontSize: "22px", fontWeight: "600" }}>Reset password</h2>
         <p style={{ textAlign: "center", color: "var(--text-muted)", marginBottom: "22px", fontSize: "13.5px" }}>Enter your email and we'll send you a reset link.</p>
         {error && <p style={{ background: "rgba(239,68,68,0.1)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.3)", padding: "10px", borderRadius: "8px", textAlign: "center", fontSize: "13.5px" }}>{error}</p>}

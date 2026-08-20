@@ -1,3 +1,4 @@
+import { usePageTitle } from '../usePageTitle';
 import React, { useState } from 'react';
 import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -52,6 +53,7 @@ function Stepper({ step }: { step: number }) {
 }
 
 function Assistant() {
+  usePageTitle('AI Assistant');
   const [goal, setGoal] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [breakdownLoading, setBreakdownLoading] = useState(false);

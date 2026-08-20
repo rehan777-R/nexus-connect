@@ -1,3 +1,4 @@
+import { usePageTitle } from '../usePageTitle';
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -6,6 +7,7 @@ import { useAuth } from '../AuthContext';
 import { useToast } from '../Toast';
 
 function CreateItem() {
+  usePageTitle('Create task');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('To Do');
@@ -44,7 +46,7 @@ function CreateItem() {
   const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid var(--border-strong)', background: 'var(--bg)', color: 'var(--text-primary)', fontSize: '14px', fontFamily: 'Inter, sans-serif', outline: 'none' };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px' }}>
+    <div className="page" style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '30px' }}>
       <div style={{ background: 'var(--surface)', padding: '40px', borderRadius: '12px', border: '1px solid var(--border)', width: '100%', maxWidth: '500px' }}>
 
         <h2 style={{ color: 'var(--text-primary)', marginBottom: '4px', fontSize: '22px', fontWeight: 600 }}>Create New Task</h2>
