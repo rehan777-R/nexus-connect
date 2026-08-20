@@ -38,7 +38,8 @@ export default function Signup() {
       await saveUserToFirestore(result.user);
       navigate("/dashboard");
     } catch (err) {
-      setError("Failed to create account. Try again!");
+      const code = (err as { code?: string })?.code;
+      setError(code ? `Signup failed: ${code}` : "Failed to create account. Try again!");
     }
     setLoading(false);
   }
@@ -51,7 +52,8 @@ export default function Signup() {
       await saveUserToFirestore(result.user);
       navigate("/dashboard");
     } catch (err) {
-      setError("Google sign-in failed. Try again!");
+      const code = (err as { code?: string })?.code;
+      setError(code ? `Google sign-in failed: ${code}` : "Google sign-in failed. Try again!");
     }
     setLoading(false);
   }

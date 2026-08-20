@@ -38,7 +38,8 @@ export default function Login() {
       await saveUserToFirestore(result.user);
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid email or password!");
+      const code = (err as { code?: string })?.code;
+      setError(code ? `Login failed: ${code}` : "Invalid email or password!");
     }
     setLoading(false);
   }
@@ -50,7 +51,8 @@ export default function Login() {
       await saveUserToFirestore(result.user);
       navigate("/dashboard");
     } catch (err) {
-      setError("Google Sign-In failed!");
+      const code = (err as { code?: string })?.code;
+      setError(code ? `Google sign-in failed: ${code}` : "Google Sign-In failed!");
     }
   }
 
