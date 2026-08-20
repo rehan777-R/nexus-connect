@@ -2,7 +2,7 @@
 
 A full-stack team workspace built with **React**, **TypeScript** and **Firebase**: role-based task management with a drag-and-drop Kanban board, real-time one-to-one chat with AI content moderation, an LLM-powered planning assistant, and a live analytics dashboard.
 
-**Live demo:** https://web-assignment-4-ten.vercel.app
+**Live demo:** https://nexus-connect-seven.vercel.app
 
 [![CI](https://github.com/rehan777-R/nexus-connect/actions/workflows/ci.yml/badge.svg)](https://github.com/rehan777-R/nexus-connect/actions/workflows/ci.yml)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
