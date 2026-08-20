@@ -70,7 +70,7 @@ function Board() {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', alignItems: 'start' }}>
+        <div className="board-grid">
           {COLUMNS.map((col) => {
             const colTasks = tasks.filter((t) => t.status === col.status);
             const isOver = dragOverCol === col.status;
@@ -81,12 +81,12 @@ function Board() {
                 onDragLeave={() => setDragOverCol(null)}
                 onDrop={(e) => handleDrop(e, col.status)}
                 style={{
-                  background: 'var(--surface)',
+                  background: isOver ? 'var(--accent-soft)' : 'var(--surface)',
                   border: `1px solid ${isOver ? col.accent : 'var(--border)'}`,
                   borderRadius: '12px',
                   padding: '16px',
                   minHeight: '300px',
-                  transition: 'border-color 0.15s',
+                  transition: 'border-color 0.15s, background 0.15s',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
@@ -106,6 +106,7 @@ function Board() {
                   return (
                     <div
                       key={task.id}
+                      className="board-card"
                       draggable
                       onDragStart={(e) => {
                         e.dataTransfer.setData('taskId', task.id);
@@ -118,8 +119,8 @@ function Board() {
                         borderRadius: '10px',
                         padding: '14px',
                         marginBottom: '10px',
-                        cursor: 'grab',
                         opacity: draggingId === task.id ? 0.4 : 1,
+                        transform: draggingId === task.id ? 'rotate(1.5deg) scale(0.98)' : 'none',
                       }}
                     >
                       <div style={{ marginBottom: '8px' }}>

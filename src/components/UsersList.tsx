@@ -44,7 +44,7 @@ const UsersList = ({ onSelectUser, selectedUser }: UsersListProps) => {
               <span style={{ position: "absolute", bottom: 0, right: 0, width: "10px", height: "10px", borderRadius: "50%", background: "#22C55E", border: "2px solid var(--surface)" }} />
             )}
           </div>
-          <div style={{ overflow: "hidden" }}>
+          <div className="chat-user-meta" style={{ overflow: "hidden" }}>
             <p style={{ color: selectedUser?.id === user.id ? "white" : "var(--text-primary)", fontSize: "14px", fontWeight: "600", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {user.displayName || "User"}
             </p>
