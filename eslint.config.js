@@ -1,12 +1,15 @@
 import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 
-export default [
+export default tseslint.config(
+  { ignores: ['dist', 'node_modules'] },
   js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    files: ['src/**/*.{js,jsx}', 'api/**/*.js'],
+    files: ['src/**/*.{js,jsx,ts,tsx}', 'api/**/*.js'],
     plugins: { react, 'react-hooks': reactHooks },
     languageOptions: {
       ecmaVersion: 'latest',
@@ -21,11 +24,15 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'react/no-unescaped-entities': 'off',
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_', caughtErrors: 'none', ignoreRestSiblings: true }],
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', caughtErrors: 'none', ignoreRestSiblings: true },
+      ],
     },
   },
   {
-    files: ['**/*.test.{js,jsx}', 'src/setupTests.js'],
+    files: ['**/*.test.{js,jsx,ts,tsx}', 'src/setupTests.js'],
     languageOptions: {
       globals: {
         ...globals.jest,
@@ -37,5 +44,5 @@ export default [
         afterEach: 'readonly',
       },
     },
-  },
-];
+  }
+);

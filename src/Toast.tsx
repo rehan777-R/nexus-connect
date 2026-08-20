@@ -1,17 +1,26 @@
-import { createContext, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 
-const ToastContext = createContext();
+type ToastType = "success" | "error" | "info";
+type ShowToast = (message: string, type?: ToastType) => void;
 
-const TOAST_COLORS = {
+interface ToastItem {
+  id: number;
+  message: string;
+  type: ToastType;
+}
+
+const ToastContext = createContext<ShowToast | null>(null);
+
+const TOAST_COLORS: Record<ToastType, { border: string; icon: string; symbol: string }> = {
   success: { border: "rgba(34,197,94,0.4)", icon: "#22C55E", symbol: "✓" },
   error: { border: "rgba(239,68,68,0.4)", icon: "#EF4444", symbol: "✕" },
   info: { border: "rgba(37,99,235,0.4)", icon: "#3B82F6", symbol: "i" },
 };
 
-export function ToastProvider({ children }) {
-  const [toasts, setToasts] = useState([]);
+export function ToastProvider({ children }: { children: ReactNode }) {
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
 
-  const showToast = useCallback((message, type = "success") => {
+  const showToast = useCallback<ShowToast>((message, type = "success") => {
     const id = Date.now() + Math.random();
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
@@ -52,6 +61,8 @@ export function ToastProvider({ children }) {
   );
 }
 
-export function useToast() {
-  return useContext(ToastContext);
+export function useToast(): ShowToast {
+  const showToast = useContext(ToastContext);
+  if (!showToast) throw new Error("useToast must be used inside a ToastProvider");
+  return showToast;
 }

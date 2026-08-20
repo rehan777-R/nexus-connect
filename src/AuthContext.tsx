@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -6,28 +6,43 @@ import {
   signOut,
   sendPasswordResetEmail,
   deleteUser,
-  onAuthStateChanged
+  onAuthStateChanged,
+  type User,
+  type UserCredential,
 } from "firebase/auth";
 import { doc, setDoc, onSnapshot } from "firebase/firestore";
-import { auth, googleProvider } from "./firebase";
-import { db } from "./firebase";
+import { auth, googleProvider, db } from "./firebase";
 import { saveUserToFirestore } from "./saveUser";
+import type { UserProfile, UserRole } from "./types";
 
-const AuthContext = createContext();
+interface AuthContextValue {
+  currentUser: User | null;
+  userRole: UserRole | null;
+  userProfile: UserProfile | null;
+  loading: boolean;
+  signup: (email: string, password: string) => Promise<UserCredential>;
+  login: (email: string, password: string) => Promise<UserCredential>;
+  googleLogin: () => Promise<UserCredential>;
+  logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  deleteAccount: () => Promise<void>;
+}
 
-export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userRole, setUserRole] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
+const AuthContext = createContext<AuthContextValue | null>(null);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  async function signup(email, password) {
+  async function signup(email: string, password: string) {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     await saveUserToFirestore(result.user);
     return result;
   }
 
-  function login(email, password) {
+  function login(email: string, password: string) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 
@@ -41,16 +56,17 @@ export function AuthProvider({ children }) {
     return signOut(auth);
   }
 
-  function resetPassword(email) {
+  function resetPassword(email: string) {
     return sendPasswordResetEmail(auth, email);
   }
 
   function deleteAccount() {
+    if (!auth.currentUser) return Promise.reject(new Error("Not signed in"));
     return deleteUser(auth.currentUser);
   }
 
   useEffect(() => {
-    let unsubProfile = null;
+    let unsubProfile: (() => void) | null = null;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       if (unsubProfile) {
@@ -61,8 +77,9 @@ export function AuthProvider({ children }) {
         // Live subscription: profile edits (name, avatar) aur role changes turant reflect hon
         unsubProfile = onSnapshot(doc(db, "users", user.uid), (snap) => {
           if (snap.exists()) {
-            setUserRole(snap.data().role);
-            setUserProfile(snap.data());
+            const profile = snap.data() as UserProfile;
+            setUserRole(profile.role);
+            setUserProfile(profile);
           }
           setLoading(false);
         });
@@ -93,17 +110,17 @@ export function AuthProvider({ children }) {
     return () => clearInterval(interval);
   }, [currentUser]);
 
-const value = {
+  const value: AuthContextValue = {
     currentUser,
     userRole,
     userProfile,
-    loading,        // ← YEH ADD KAREIN
+    loading,
     signup,
     login,
     googleLogin,
     logout,
     resetPassword,
-    deleteAccount
+    deleteAccount,
   };
   return (
     <AuthContext.Provider value={value}>
@@ -112,6 +129,8 @@ const value = {
   );
 }
 
-export function useAuth() {
-  return useContext(AuthContext);
+export function useAuth(): AuthContextValue {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside an AuthProvider");
+  return ctx;
 }
