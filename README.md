@@ -1,13 +1,17 @@
-# Nexus — Team Task Manager (Web Assignment 4)
+# Nexus — Team Task Manager
 
-A full-stack team workspace built with **React** and **Firebase**: role-based task management with a drag-and-drop Kanban board, real-time one-to-one chat with AI content moderation, an LLM-powered planning assistant, and a live analytics dashboard.
+A full-stack team workspace built with **React**, **TypeScript** and **Firebase**: role-based task management with a drag-and-drop Kanban board, real-time one-to-one chat with AI content moderation, an LLM-powered planning assistant, and a live analytics dashboard.
 
 **Live demo:** https://web-assignment-4-ten.vercel.app
 
+[![CI](https://github.com/rehan777-R/nexus-connect/actions/workflows/ci.yml/badge.svg)](https://github.com/rehan777-R/nexus-connect/actions/workflows/ci.yml)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%2B%20Auth-FFCA28?logo=firebase&logoColor=black)
 ![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel)
 ![AI](https://img.shields.io/badge/AI-Llama%203.3%2070B%20via%20Groq-blueviolet)
+![Tests](https://img.shields.io/badge/tests-50%20passing-22C55E?logo=vitest&logoColor=white)
 
 ---
 
@@ -36,9 +40,17 @@ A full-stack team workspace built with **React** and **Firebase**: role-based ta
 
 ### Auth & roles
 - Firebase Authentication with **email/password** and **Google sign-in**
-- **Admin / user roles** enforced by protected routes
+- **Admin / user roles** enforced twice: protected routes in the client and **Firestore security rules** at the database layer
 - User profiles with display name and avatar color
 - Password reset flow
+
+### Security
+- **Firestore security rules** (`firestore.rules`) are the real access-control layer — the React route guards are UX only:
+  - users can never escalate their own role
+  - tasks are readable/writable only by their owner or an admin, and queries are scoped server-side
+  - chat messages are visible only to the two participants (admins can review flagged ones); receivers can only toggle reactions, never edit
+  - everything else is denied by default
+- The Groq API key lives only in serverless functions; it never reaches the browser
 
 ---
 
@@ -88,8 +100,9 @@ flowchart LR
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 19, React Router 6 |
-| Backend | Firebase (Firestore + Authentication), Vercel Serverless Functions |
+| Frontend | React 19, TypeScript (strict, incremental migration), React Router 6 |
+| Build & test | Vite 6, Vitest + Testing Library (50 tests), ESLint 9, GitHub Actions CI |
+| Backend | Firebase (Firestore + Authentication + security rules), Vercel Serverless Functions |
 | AI | Groq API (Llama 3.3 70B) — moderation & planning assistant |
 | Hosting | Vercel (CI/CD from this repo) |
 
@@ -101,7 +114,7 @@ flowchart LR
 git clone https://github.com/rehan777-R/nexus-connect.git
 cd nexus-connect
 npm install
-npm start          # frontend only, at http://localhost:3000
+npm run dev        # frontend only, at http://localhost:3000
 ```
 
 The AI features (`/api/moderate`, `/api/assistant`) are Vercel serverless functions. To run them locally, use the Vercel CLI instead:
@@ -116,6 +129,27 @@ vercel dev
 | Variable | Purpose |
 |---|---|
 | `GROQ_API_KEY` | Groq API key used by the moderation and assistant endpoints |
+
+---
+
+## Testing & quality
+
+Every push runs lint, type check, tests and a production build in [GitHub Actions](.github/workflows/ci.yml).
+
+```bash
+npm test           # 50 Vitest + Testing Library tests
+npm run lint       # ESLint 9 (react, react-hooks, typescript-eslint)
+npm run typecheck  # TypeScript strict mode
+npm run build      # production build with vendor chunk splitting
+```
+
+The tests cover auth routing and role guards, the login flow, task list filtering/search and role-scoped queries, Kanban drag-and-drop status updates, due-date/overdue logic, presence, toasts, the AI moderation pipeline (client + serverless handler) and the assistant API's validation and payload capping.
+
+Firestore security rules live in [`firestore.rules`](firestore.rules) and deploy with:
+
+```bash
+firebase deploy --only firestore:rules
+```
 
 ---
 
