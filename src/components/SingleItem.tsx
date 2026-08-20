@@ -3,34 +3,19 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
-const PRIORITY_COLORS = {
-  Low: { bg: 'rgba(34,197,94,0.12)', text: '#22C55E' },
-  Medium: { bg: 'rgba(234,179,8,0.12)', text: '#EAB308' },
-  High: { bg: 'rgba(239,68,68,0.12)', text: '#EF4444' },
-};
-const STATUS_COLORS = {
-  'To Do': { bg: 'rgba(113,113,122,0.15)', text: '#A1A1AA' },
-  'In Progress': { bg: 'rgba(37,99,235,0.12)', text: '#3B82F6' },
-  'Done': { bg: 'rgba(34,197,94,0.12)', text: '#22C55E' },
-};
-function Badge({ label, colors }) {
-  if (!label || !colors) return null;
-  return (
-    <span style={{ display: 'inline-block', padding: '4px 12px', borderRadius: '6px', fontSize: '13px', fontWeight: 500, background: colors.bg, color: colors.text, marginRight: '10px' }}>
-      {label}
-    </span>
-  );
-}
+import { PRIORITY_COLORS, STATUS_COLORS, Badge } from './taskBadges';
+import type { Task } from '../types';
+
 function SingleItem() {
-  const [item, setItem] = useState(null);
-  const { id } = useParams();
+  const [item, setItem] = useState<Task | null>(null);
+  const { id } = useParams() as { id: string };
   const { currentUser, userRole } = useAuth();
   useEffect(() => {
     const fetchItem = async () => {
       const docRef = doc(db, 'items', id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setItem({ id: docSnap.id, ...docSnap.data() });
+        setItem({ id: docSnap.id, ...docSnap.data() } as Task);
       }
     };
     fetchItem();

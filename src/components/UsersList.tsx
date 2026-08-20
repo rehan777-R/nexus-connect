@@ -2,12 +2,19 @@ import { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { isOnline } from "./presence";
-const UsersList = ({ onSelectUser, selectedUser }) => {
-  const [users, setUsers] = useState([]);
+import type { ChatUser } from "../types";
+
+interface UsersListProps {
+  onSelectUser: (user: ChatUser) => void;
+  selectedUser: ChatUser | null;
+}
+
+const UsersList = ({ onSelectUser, selectedUser }: UsersListProps) => {
+  const [users, setUsers] = useState<ChatUser[]>([]);
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "users"), (snapshot) => {
       const list = snapshot.docs
-        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .map((doc) => ({ id: doc.id, ...doc.data() } as ChatUser))
         .filter((u) => u.id !== auth.currentUser?.uid);
       setUsers(list);
     });

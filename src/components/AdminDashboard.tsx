@@ -3,25 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
+import type { Message, Task, UserProfile } from "../types";
 
 export default function AdminDashboard() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [items, setItems] = useState([]);
-  const [flaggedMessages, setFlaggedMessages] = useState([]);
+  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [items, setItems] = useState<Task[]>([]);
+  const [flaggedMessages, setFlaggedMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     async function fetchData() {
       const usersSnap = await getDocs(collection(db, "users"));
       const itemsSnap = await getDocs(collection(db, "items"));
-      const usersList = usersSnap.docs.map(doc => doc.data());
-      setUsers(usersList);
-      setItems(itemsSnap.docs.map(doc => doc.data()));
+      setUsers(usersSnap.docs.map(doc => doc.data() as UserProfile));
+      setItems(itemsSnap.docs.map(doc => doc.data() as Task));
 
       const flaggedQuery = query(collection(db, "messages"), where("flagged", "==", true));
       const flaggedSnap = await getDocs(flaggedQuery);
-      setFlaggedMessages(flaggedSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setFlaggedMessages(flaggedSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Message)));
     }
     fetchData();
   }, []);
@@ -34,10 +34,10 @@ export default function AdminDashboard() {
   const adminCount = users.filter(u => u.role === "admin").length;
   const userCount = users.filter(u => u.role === "user").length;
 
-  const emailByUid = {};
+  const emailByUid: Record<string, string> = {};
   users.forEach(u => { emailByUid[u.uid] = u.email; });
 
-  const statCard = (value, label, color) => (
+  const statCard = (value: number, label: string, color: string) => (
     <div style={{ background: "#111113", border: "1px solid #1F1F23", borderRadius: "10px", padding: "20px", textAlign: "center" }}>
       <h2 style={{ color: color, margin: "0 0 4px", fontSize: "24px", fontWeight: "700" }}>{value}</h2>
       <p style={{ color: "#71717A", margin: 0, fontSize: "12.5px" }}>{label}</p>

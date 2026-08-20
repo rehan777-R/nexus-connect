@@ -4,9 +4,10 @@ import { doc, setDoc } from "firebase/firestore";
 import UsersList from "./UsersList";
 import ChatWindow from "./ChatWindow";
 import ChatInput from "./ChatInput";
+import type { ChatUser } from "../types";
 
 const Chat = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
 
   useEffect(() => {
     const user = auth.currentUser;

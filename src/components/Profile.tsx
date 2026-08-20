@@ -7,9 +7,9 @@ import { useToast } from '../Toast';
 
 const AVATAR_COLORS = ['#2563EB', '#7C3AED', '#DB2777', '#EF4444', '#EA580C', '#EAB308', '#22C55E', '#0D9488'];
 
-const card = { background: '#111113', border: '1px solid #1F1F23', borderRadius: '12px', padding: '28px' };
-const labelStyle = { display: 'block', marginBottom: '8px', color: '#A1A1AA', fontWeight: 500, fontSize: '13px' };
-const inputStyle = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid #27272A', background: '#0A0A0B', color: '#E5E5E7', fontSize: '14px', outline: 'none', margin: 0 };
+const card: React.CSSProperties = { background: '#111113', border: '1px solid #1F1F23', borderRadius: '12px', padding: '28px' };
+const labelStyle: React.CSSProperties = { display: 'block', marginBottom: '8px', color: '#A1A1AA', fontWeight: 500, fontSize: '13px' };
+const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid #27272A', background: '#0A0A0B', color: '#E5E5E7', fontSize: '14px', outline: 'none', margin: 0 };
 
 function Profile() {
   const { currentUser, userRole } = useAuth();
@@ -21,8 +21,9 @@ function Profile() {
 
   useEffect(() => {
     if (!currentUser) return;
+    const uid = currentUser.uid;
     async function fetchProfile() {
-      const snap = await getDoc(doc(db, 'users', currentUser.uid));
+      const snap = await getDoc(doc(db, 'users', uid));
       if (snap.exists()) {
         const data = snap.data();
         setDisplayName(data.displayName || '');
@@ -33,8 +34,9 @@ function Profile() {
     fetchProfile();
   }, [currentUser]);
 
-  const handleSave = async (e) => {
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!currentUser) return;
     setSaving(true);
     try {
       await setDoc(

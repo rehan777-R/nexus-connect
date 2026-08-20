@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { User } from "firebase/auth";
 import { useAuth } from "./AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { db } from "./firebase";
@@ -13,7 +14,7 @@ export default function Signup() {
   const { signup, googleLogin } = useAuth();
   const navigate = useNavigate();
 
-  async function saveUserToFirestore(user) {
+  async function saveUserToFirestore(user: User) {
     await setDoc(
       doc(db, "users", user.uid),
       {
@@ -26,7 +27,7 @@ export default function Signup() {
     );
   }
 
-  async function handleSignup(e) {
+  async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
     setLoading(true);

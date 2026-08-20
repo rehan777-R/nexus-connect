@@ -3,10 +3,11 @@ import { useAuth } from "../AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
+import type { Task } from "../types";
 
-const card = { background: "#111113", border: "1px solid #1F1F23", borderRadius: "12px", padding: "24px" };
+const card: React.CSSProperties = { background: "#111113", border: "1px solid #1F1F23", borderRadius: "12px", padding: "24px" };
 
-function StatTile({ value, label, color }) {
+function StatTile({ value, label, color }: { value: number | string; label: string; color: string }) {
   return (
     <div style={{ ...card, padding: "20px", textAlign: "center" }}>
       <h2 style={{ color: color, margin: "0 0 4px", fontSize: "26px", fontWeight: 700 }}>{value}</h2>
@@ -17,7 +18,7 @@ function StatTile({ value, label, color }) {
 
 // Horizontal bar chart. Every row carries its own text label, so identity
 // never depends on color alone (colors are the app's semantic status colors).
-function HBarChart({ title, rows }) {
+function HBarChart({ title, rows }: { title: string; rows: { label: string; value: number; color: string }[] }) {
   const max = Math.max(...rows.map((r) => r.value), 1);
   return (
     <div style={card}>
@@ -36,12 +37,18 @@ function HBarChart({ title, rows }) {
 }
 
 // Single-series 7-day trend, SVG line + area with hover tooltips.
-function TrendChart({ title, points }) {
-  const [hover, setHover] = useState(null);
+interface TrendPoint {
+  label: string;
+  fullLabel: string;
+  count: number;
+}
+
+function TrendChart({ title, points }: { title: string; points: TrendPoint[] }) {
+  const [hover, setHover] = useState<number | null>(null);
   const W = 560, H = 150, PAD_X = 28, PAD_TOP = 14, PAD_BOTTOM = 26;
   const max = Math.max(...points.map((p) => p.count), 1);
-  const x = (i) => PAD_X + (i * (W - PAD_X * 2)) / (points.length - 1);
-  const y = (v) => PAD_TOP + (1 - v / max) * (H - PAD_TOP - PAD_BOTTOM);
+  const x = (i: number) => PAD_X + (i * (W - PAD_X * 2)) / (points.length - 1);
+  const y = (v: number) => PAD_TOP + (1 - v / max) * (H - PAD_TOP - PAD_BOTTOM);
   const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(i)},${y(p.count)}`).join(" ");
   const areaPath = `${linePath} L${x(points.length - 1)},${H - PAD_BOTTOM} L${x(0)},${H - PAD_BOTTOM} Z`;
 
@@ -78,16 +85,17 @@ function TrendChart({ title, points }) {
 export default function UserDashboard() {
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
     if (!currentUser) return;
+    const uid = currentUser.uid;
     async function fetchTasks() {
       // The dashboard shows personal analytics, so only query own tasks —
       // security rules also reject anything broader for non-admins.
-      const q = query(collection(db, "items"), where("createdBy", "==", currentUser.uid));
+      const q = query(collection(db, "items"), where("createdBy", "==", uid));
       const snap = await getDocs(q);
-      setTasks(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      setTasks(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Task)));
     }
     fetchTasks();
   }, [currentUser]);
@@ -111,7 +119,7 @@ export default function UserDashboard() {
     const completion = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
 
     // Last 7 days of task creation
-    const trend = [];
+    const trend: TrendPoint[] = [];
     for (let i = 6; i >= 0; i--) {
       const day = new Date();
       day.setDate(day.getDate() - i);

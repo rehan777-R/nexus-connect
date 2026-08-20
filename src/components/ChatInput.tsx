@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { db, auth } from "../firebase";
 import { collection, addDoc, setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { moderateInBackground } from "./moderation";
+import type { ChatUser } from "../types";
 
-const ChatInput = ({ selectedUser }) => {
+const ChatInput = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
   const [text, setText] = useState("");
   const lastTypingWrite = useRef(0);
 
@@ -13,7 +14,7 @@ const ChatInput = ({ selectedUser }) => {
     return doc(db, "typing", `${me}_${selectedUser.id}`);
   };
 
-  const setTyping = async (isTyping) => {
+  const setTyping = async (isTyping: boolean) => {
     const ref = typingDocRef();
     if (!ref) return;
     try {
@@ -23,7 +24,7 @@ const ChatInput = ({ selectedUser }) => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setText(value);
     if (!value.trim()) {
@@ -46,16 +47,16 @@ const ChatInput = ({ selectedUser }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser]);
 
-  const sendMessage = async (e) => {
+  const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!text.trim() || !selectedUser) return;
+    if (!text.trim() || !selectedUser || !auth.currentUser) return;
     const messageText = text.trim();
     setText("");
     setTyping(false);
     try {
       const docRef = await addDoc(collection(db, "messages"), {
         text: messageText,
-        senderId: auth.currentUser?.uid,
+        senderId: auth.currentUser.uid,
         receiverId: selectedUser.id,
         timestamp: serverTimestamp(),
         flagged: false,

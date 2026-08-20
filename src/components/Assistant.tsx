@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../Toast';
 import { PRIORITY_COLORS, Badge } from './taskBadges';
+import type { TaskPriority } from '../types';
 
-const card = { background: '#111113', border: '1px solid #1F1F23', borderRadius: '12px', padding: '28px' };
-const inputStyle = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid #27272A', background: '#0A0A0B', color: '#E5E5E7', fontSize: '14px', outline: 'none', margin: 0 };
+interface Suggestion {
+  title: string;
+  description: string;
+  priority: TaskPriority;
+  added: boolean;
+}
+
+const card: React.CSSProperties = { background: '#111113', border: '1px solid #1F1F23', borderRadius: '12px', padding: '28px' };
+const inputStyle: React.CSSProperties = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid #27272A', background: '#0A0A0B', color: '#E5E5E7', fontSize: '14px', outline: 'none', margin: 0 };
 
 function Assistant() {
   const [goal, setGoal] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [breakdownLoading, setBreakdownLoading] = useState(false);
   const [addingAll, setAddingAll] = useState(false);
   const [summary, setSummary] = useState('');
@@ -21,7 +29,7 @@ function Assistant() {
   const { currentUser } = useAuth();
   const showToast = useToast();
 
-  const generateBreakdown = async (e) => {
+  const generateBreakdown = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!goal.trim()) return;
     setBreakdownLoading(true);
@@ -35,7 +43,7 @@ function Assistant() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Request failed');
-      setSuggestions((data.tasks || []).map((t) => ({ ...t, added: false })));
+      setSuggestions(((data.tasks || []) as Omit<Suggestion, 'added'>[]).map((t) => ({ ...t, added: false })));
     } catch (err) {
       console.error('AI breakdown failed:', err);
       setError('Could not generate tasks. Please try again.');
@@ -43,8 +51,9 @@ function Assistant() {
     setBreakdownLoading(false);
   };
 
-  const addTask = async (index) => {
+  const addTask = async (index: number) => {
     const t = suggestions[index];
+    if (!currentUser) return;
     try {
       await addDoc(collection(db, 'items'), {
         title: t.title,
@@ -74,14 +83,15 @@ function Assistant() {
   };
 
   const generateSummary = async () => {
+    if (!currentUser) return;
     setSummaryLoading(true);
     setError('');
     setSummary('');
     try {
-      const snap = await getDocs(collection(db, 'items'));
-      const myTasks = snap.docs
-        .map((d) => d.data())
-        .filter((t) => t.createdBy === currentUser.uid);
+      // Query only this user's tasks — the security rules reject broader reads.
+      const q = query(collection(db, 'items'), where('createdBy', '==', currentUser.uid));
+      const snap = await getDocs(q);
+      const myTasks = snap.docs.map((d) => d.data());
       if (myTasks.length === 0) {
         setSummary('You have no tasks yet. Create some tasks (or generate them above) and I can summarize your workload.');
         setSummaryLoading(false);

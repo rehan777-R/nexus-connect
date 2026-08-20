@@ -16,16 +16,17 @@ import {
 } from "firebase/firestore";
 import { moderateInBackground } from "./moderation";
 import { isOnline } from "./presence";
+import type { ChatUser, Message } from "../types";
 
 const REACTION_EMOJIS = ["👍", "❤️", "😂", "🎉"];
 
-const ChatWindow = ({ selectedUser }) => {
-  const [messages, setMessages] = useState([]);
-  const [hovered, setHovered] = useState(null);
-  const [editingId, setEditingId] = useState(null);
+const ChatWindow = ({ selectedUser }: { selectedUser: ChatUser | null }) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
   const [otherTyping, setOtherTyping] = useState(false);
-  const bottomRef = useRef(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!selectedUser) return;
@@ -46,7 +47,7 @@ const ChatWindow = ({ selectedUser }) => {
       orderBy("timestamp", "asc")
     );
     const unsub = onSnapshot(q, (snapshot) => {
-      setMessages(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      setMessages(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Message)));
     });
     return () => unsub();
   }, [selectedUser]);
@@ -56,7 +57,7 @@ const ChatWindow = ({ selectedUser }) => {
     if (!selectedUser) return;
     const currentUid = auth.currentUser?.uid;
     const typingRef = doc(db, "typing", `${selectedUser.id}_${currentUid}`);
-    let staleTimer;
+    let staleTimer: ReturnType<typeof setTimeout> | undefined;
     const unsub = onSnapshot(typingRef, (snap) => {
       clearTimeout(staleTimer);
       const data = snap.data();
@@ -76,7 +77,7 @@ const ChatWindow = ({ selectedUser }) => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, otherTyping]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm("Delete this message?")) return;
     try {
       await deleteDoc(doc(db, "messages", id));
@@ -86,14 +87,14 @@ const ChatWindow = ({ selectedUser }) => {
     }
   };
 
-  const startEdit = (msg) => {
+  const startEdit = (msg: Message) => {
     setEditingId(msg.id);
     setEditText(msg.text);
   };
 
   const saveEdit = async () => {
     const newText = editText.trim();
-    if (!newText) return;
+    if (!newText || !editingId) return;
     const id = editingId;
     setEditingId(null);
     try {
@@ -105,7 +106,7 @@ const ChatWindow = ({ selectedUser }) => {
     }
   };
 
-  const toggleReaction = async (msg, emoji) => {
+  const toggleReaction = async (msg: Message, emoji: string) => {
     const uid = auth.currentUser?.uid;
     if (!uid) return;
     const reacted = msg.reactions?.[emoji]?.includes(uid);
@@ -128,7 +129,7 @@ const ChatWindow = ({ selectedUser }) => {
 
   const online = isOnline(selectedUser);
 
-  const iconBtnStyle = { background: "transparent", border: "none", color: "#71717A", cursor: "pointer", fontSize: "14px", lineHeight: 1, padding: "2px 4px" };
+  const iconBtnStyle: React.CSSProperties = { background: "transparent", border: "none", color: "#71717A", cursor: "pointer", fontSize: "14px", lineHeight: 1, padding: "2px 4px" };
 
   return (
     <>
@@ -234,7 +235,7 @@ const ChatWindow = ({ selectedUser }) => {
               {reactionEntries.length > 0 && (
                 <div style={{ display: "flex", gap: "4px", marginTop: "3px" }}>
                   {reactionEntries.map(([emoji, uids]) => {
-                    const mine = uids.includes(auth.currentUser?.uid);
+                    const mine = uids.includes(auth.currentUser?.uid ?? '');
                     return (
                       <button
                         key={emoji}

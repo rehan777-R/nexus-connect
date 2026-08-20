@@ -1,4 +1,5 @@
 // Shared domain types for the app's Firestore documents.
+import type { Timestamp } from 'firebase/firestore';
 
 export type TaskStatus = 'To Do' | 'In Progress' | 'Done';
 export type TaskPriority = 'Low' | 'Medium' | 'High';
@@ -33,8 +34,18 @@ export interface Message {
   text: string;
   senderId: string;
   receiverId: string;
+  timestamp?: Timestamp;
   edited?: boolean;
   flagged?: boolean;
   flagReason?: string;
   reactions?: Record<string, string[]>;
+}
+
+// A chat contact as loaded from the users collection ({ id: doc.id, ...data }).
+export interface ChatUser {
+  id: string;
+  email?: string;
+  displayName?: string;
+  avatarColor?: string;
+  lastSeen?: string;
 }

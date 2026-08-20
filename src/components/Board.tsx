@@ -5,17 +5,18 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../Toast';
 import { PRIORITY_COLORS, Badge, dueDateInfo } from './taskBadges';
+import type { Task, TaskStatus } from '../types';
 
-const COLUMNS = [
+const COLUMNS: { status: TaskStatus; accent: string }[] = [
   { status: 'To Do', accent: '#A1A1AA' },
   { status: 'In Progress', accent: '#3B82F6' },
   { status: 'Done', accent: '#22C55E' },
 ];
 
 function Board() {
-  const [tasks, setTasks] = useState([]);
-  const [draggingId, setDraggingId] = useState(null);
-  const [dragOverCol, setDragOverCol] = useState(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverCol, setDragOverCol] = useState<TaskStatus | null>(null);
   const { currentUser, userRole } = useAuth();
   const showToast = useToast();
 
@@ -26,12 +27,12 @@ function Board() {
     const ref = collection(db, 'items');
     const q = userRole === 'admin' ? ref : query(ref, where('createdBy', '==', currentUser.uid));
     const unsub = onSnapshot(q, (snapshot) => {
-      setTasks(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+      setTasks(snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Task)));
     });
     return () => unsub();
   }, [currentUser, userRole]);
 
-  const handleDrop = async (e, newStatus) => {
+  const handleDrop = async (e: React.DragEvent, newStatus: TaskStatus) => {
     e.preventDefault();
     setDragOverCol(null);
     const id = e.dataTransfer.getData('taskId');

@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../Toast';
 import { PRIORITY_COLORS, STATUS_COLORS, Badge, dueDateInfo } from './taskBadges';
+import type { Task } from '../types';
 
-const SAMPLE_TASKS = [
+const SAMPLE_TASKS: Omit<Task, 'id' | 'createdBy' | 'createdByEmail' | 'createdAt'>[] = [
   { title: 'Design landing page mockup', description: 'Create the hero section and pricing layout in Figma for client review.', status: 'In Progress', priority: 'High' },
   { title: 'Set up CI/CD pipeline', description: 'Configure automatic deployments to Vercel on every push to master.', status: 'To Do', priority: 'Medium' },
   { title: 'Write API documentation', description: 'Document all REST endpoints with request/response examples.', status: 'To Do', priority: 'Low' },
@@ -14,12 +15,12 @@ const SAMPLE_TASKS = [
   { title: 'Team sync meeting notes', description: 'Share weekly standup notes and blockers with the team.', status: 'Done', priority: 'Low' },
 ];
 
-const PRIORITY_ORDER = { High: 0, Medium: 1, Low: 2 };
+const PRIORITY_ORDER: Record<string, number> = { High: 0, Medium: 1, Low: 2 };
 
-const filterSelectStyle = { width: 'auto', padding: '9px 12px', borderRadius: '8px', border: '1px solid #27272A', background: '#111113', color: '#E5E5E7', fontSize: '13px', outline: 'none', margin: 0 };
+const filterSelectStyle: React.CSSProperties = { width: 'auto', padding: '9px 12px', borderRadius: '8px', border: '1px solid #27272A', background: '#111113', color: '#E5E5E7', fontSize: '13px', outline: 'none', margin: 0 };
 
 function AllItems() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<Task[]>([]);
   const [loadingSamples, setLoadingSamples] = useState(false);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
@@ -29,6 +30,7 @@ function AllItems() {
   const showToast = useToast();
 
   const fetchItems = async () => {
+    if (!currentUser) return;
     // Admins query everything; regular users only query their own tasks.
     // Firestore security rules reject broader reads, so the scoping must
     // happen in the query itself, not client-side filtering.
@@ -38,7 +40,7 @@ function AllItems() {
     setItems(querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    })));
+    } as Task)));
   };
 
   useEffect(() => {
@@ -46,7 +48,7 @@ function AllItems() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, userRole]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       await deleteDoc(doc(db, 'items', id));
       showToast('Task deleted');
@@ -55,6 +57,7 @@ function AllItems() {
   };
 
   const loadSampleTasks = async () => {
+    if (!currentUser) return;
     setLoadingSamples(true);
     try {
       for (const t of SAMPLE_TASKS) {
@@ -192,7 +195,7 @@ function AllItems() {
                   <Link to={`/items/${item.id}`}>
                     <button style={{ padding: '8px 14px', background: '#1F1F23', color: '#E5E5E7', border: '1px solid #27272A', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>View</button>
                   </Link>
-                  {(userRole === 'admin' || item.createdBy === currentUser.uid) && (
+                  {(userRole === 'admin' || item.createdBy === currentUser?.uid) && (
                     <>
                       <Link to={`/edit/${item.id}`}>
                         <button style={{ padding: '8px 14px', background: '#1F1F23', color: '#E5E5E7', border: '1px solid #27272A', borderRadius: '8px', cursor: 'pointer', fontWeight: 500, fontSize: '13px' }}>Edit</button>
