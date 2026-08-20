@@ -175,4 +175,4 @@ firebase deploy --only firestore:rules
        ![Analytics dashboard](docs/dashboard.png)
 -->
 
-> _Screenshots coming soon — the app ships with a light/dark theme toggle, an agentic AI planning flow, and an AI moderation review queue. See the [live demo](https://web-assignment-4-ten.vercel.app)._
+> _Screenshots coming soon — the app ships with a light/dark theme toggle, an agentic AI planning flow, and an AI moderation review queue. See the [live demo](https://nexus-connect-seven.vercel.app)._
