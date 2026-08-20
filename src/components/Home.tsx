@@ -30,7 +30,7 @@ function Home() {
             Tasks, ownership, and real-time chat, all in one connected workspace.
           </p>
         <div style={{ marginBottom: '32px' }}>
-          <span className="ai-badge">✨ Powered by an LLM planning agent &amp; AI moderation — Llama 3.3 70B via Groq</span>
+          <span className="ai-badge">✨ Powered by an LLM planning agent &amp; AI moderation — Llama 4 via Groq</span>
         </div>
         {currentUser ? (
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -90,7 +90,7 @@ function Home() {
           {[
             {
               title: 'LLM planning agent',
-              desc: 'Describe a goal and Llama 3.3 70B (via Groq) returns a structured JSON task plan with priorities — reviewed by you, then filed onto the Kanban board in one click.',
+              desc: 'Describe a goal and a Llama model (via Groq) returns a structured JSON task plan with priorities — reviewed by you, then filed onto the Kanban board in one click.',
             },
             {
               title: 'AI moderation pipeline',

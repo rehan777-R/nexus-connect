@@ -158,7 +158,7 @@ function Assistant() {
         <div style={{ marginBottom: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <h2 style={{ color: 'var(--text-primary)', margin: 0, fontSize: '22px', fontWeight: 600 }}>AI Assistant</h2>
-            <AiBadge>Llama 3.3 70B · Groq · serverless</AiBadge>
+            <AiBadge>Llama 4 · Groq · serverless</AiBadge>
           </div>
           <p style={{ color: 'var(--text-muted)', margin: '6px 0 0', fontSize: '13.5px' }}>
             An LLM planning agent: it turns your goal into structured, prioritized tasks and files them onto your board.
@@ -194,7 +194,7 @@ function Assistant() {
             </button>
           </form>
 
-          {breakdownLoading && <Thinking label="Llama 3.3 70B is planning your tasks…" />}
+          {breakdownLoading && <Thinking label="Llama is planning your tasks…" />}
 
           {suggestions.length > 0 && (
             <div style={{ marginTop: '20px' }}>

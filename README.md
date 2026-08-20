@@ -10,7 +10,7 @@ A full-stack team workspace built with **React**, **TypeScript** and **Firebase*
 ![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%2B%20Auth-FFCA28?logo=firebase&logoColor=black)
 ![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel)
-![AI](https://img.shields.io/badge/AI-Llama%203.3%2070B%20via%20Groq-blueviolet)
+![AI](https://img.shields.io/badge/AI-Llama%204%20via%20Groq-blueviolet)
 ![Tests](https://img.shields.io/badge/tests-50%20passing-22C55E?logo=vitest&logoColor=white)
 
 ---
@@ -32,7 +32,7 @@ A full-stack team workspace built with **React**, **TypeScript** and **Firebase*
 ### AI assistant
 - **Goal breakdown** — describe a goal, get 3–6 concrete tasks with priorities, add them to your board in one click
 - **Workload summary** — an LLM reads your open tasks and tells you what to tackle next
-- Runs on **Llama 3.3 70B via Groq**, called from Vercel serverless functions so the API key never reaches the client
+- Runs on **Llama 4 via Groq**, called from Vercel serverless functions so the API key never reaches the client
 
 ### Analytics dashboard
 - Stat tiles: totals, in-progress, completion rate, overdue count
@@ -78,7 +78,7 @@ flowchart LR
         AST["/api/assistant<br/>task breakdown + summary"]
     end
 
-    GROQ[Groq API<br/>Llama 3.3 70B]
+    GROQ[Groq API<br/>Llama 4]
 
     UI --> AC
     AC --> Auth
@@ -108,7 +108,7 @@ flowchart LR
 | Frontend | React 19, TypeScript (strict, incremental migration), React Router 6 |
 | Build & test | Vite 6, Vitest + Testing Library (50 tests), ESLint 9, GitHub Actions CI |
 | Backend | Firebase (Firestore + Authentication + security rules), Vercel Serverless Functions |
-| AI | Groq API (Llama 3.3 70B) — moderation & planning assistant |
+| AI | Groq API (Llama 4) — moderation & planning assistant |
 | Hosting | Vercel (CI/CD from this repo) |
 
 ---

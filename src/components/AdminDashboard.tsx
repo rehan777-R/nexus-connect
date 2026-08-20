@@ -74,7 +74,7 @@ export default function AdminDashboard() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "12px", padding: "24px", marginBottom: "18px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px", flexWrap: "wrap" }}>
             <h3 style={{ color: "var(--text-primary)", margin: 0, fontSize: "15px", fontWeight: "600" }}>Moderation review queue</h3>
-            <span className="ai-badge">✨ Screened by Llama 3.3 70B</span>
+            <span className="ai-badge">✨ Screened by Llama 4 via Groq</span>
           </div>
           <p style={{ color: "var(--text-muted)", fontSize: "12.5px", margin: "0 0 14px" }}>
             Every chat message (including edits) is classified by an LLM in the background. Flagged messages land here for human review.
