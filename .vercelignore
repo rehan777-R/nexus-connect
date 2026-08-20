@@ -1,0 +1,4 @@
+# Keep test files out of the deployment — every .js file in api/
+# would otherwise be deployed as a serverless function.
+api/*.test.js
+coverage
